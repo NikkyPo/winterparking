@@ -1,0 +1,104 @@
+html, body, #viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Avenir Next W00","Avenir Next",Avenir;
+}
+.slidemenu {
+  position: absolute;
+  display: flex;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 1;
+  color: white;
+  background: white;
+  font-size: 20px;
+  overflow: hidden;
+}
+/* Tab styles*/
+.tab-desktop {
+  width: 100%;
+}
+.tab-menu {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.tab-menu li {
+  width: 25%;
+  text-align: center;
+  display: block;
+  float: left;
+  padding: 7px 0;
+}
+
+.tab-menu li a {
+  display: block; /* needed to give your ul li a dispaly of block so that they cover  100% the width of the LI by defaul (do NOT give this rule  explicit width!!*/
+  padding: 1px;
+  color: #666;
+  font-size: 11px;
+}
+
+ul li a:hover {
+  color: blue;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+}
+ul li a:focus {
+  color: blue;
+  font-weight: 800;
+  cursor: pointer;
+  outline: 0;
+  outline-color: transparent;
+  outline-style: none;
+}
+ul li a:active {
+  opacity: 1;
+  color: blue;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.slidemenu li .icon {
+  font-size: 18px;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  line-height: 30px;
+  border-radius: 50%;
+}
+.custom-a {
+  text-decoration: none;
+}
+
+
+/* Card customization */
+
+ /* Reverses card collapse direction */
+#status-collapse, #phases-collapse {
+  position: absolute;
+  bottom: 60px;
+  width: 100%;
+}
+
+/* Custom cards for 'Current Status' */
+.status-header, .status-title {
+  background-color: red;
+  color: white;
+}
+
+.x-header {
+  float:right;
+  color: white;
+}
+
+
+@media (min-width: 769px) {
+  .container-fluid {
+    max-width: 700px;;
+  }
+}

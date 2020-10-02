@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="https://www.esri.com/favicon.ico">
+    <title>Winter Snow Emergency Parking Map</title>
+
+    <!-- Bootstrap Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script type="nomodule" src="/Users/Nicole.Helgeson/node_modules/@esri/calcite-components/dist/calcite/calcite.js"></script>
+
+    <!-- Esri API for Javascript -->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/css/main.css" />
+    <link rel="stylesheet" href="test.css">
+    <script src="https://js.arcgis.com/4.16/"></script>
+    <script type="text/javascript" src="test.js"></script>
+  </head>
+  <body>
+  <div class="message"></div>
+    <div id="viewDiv" class=""></div>
+    <nav class="slidemenu">
+      <div class="container-fluid">
+      <ul class="tab-menu">
+        <li class="active">
+          <a id="test1" class="custom-a" href="#status-collapse" data-toggle="collapse" role="button" tabindex="0" data-target="#status-collapse" aria-haspopup="true">
+            <p class="icon esri-icon-notice-triangle"></p>
+            <span>Status</span>
+          </a>
+        </li>
+        <li>
+          <a id="test2" class="custom-a" href="#phases-collapse" data-toggle="collapse" role="menuitem" tabindex="0" data-target="#phases-collapse" aria-haspopup="true">
+            <p class="icon esri-icon-layer-list"></p>
+            <span>Phases</span>
+          </a>
+        </li>
+        <li>
+          <a class="custom-a" data-toggle="collapse" role="menuitem" tabindex="0" data-target="#panelMap" aria-haspopup="true">
+            <p class="icon esri-icon-basemap"></p>
+            <span>Map Type</span>
+          </a>
+        </li>
+        <li>
+          <a class="custom-a" data-toggle="collapse" role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true">
+            <p class="icon esri-icon-question"></p>
+            <span>Help</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    </nav>
+
+    <div class="collapse" id="status-collapse">
+      <div class="card">
+        <div class="card-header status-header">
+          <a class="status-title" role="button" data-target="#status-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="#status-collapse">
+            <span class="esri-icon-layer-list" aria-hidden="true"></span><span> Current Status</span>
+          </a>
+          <a class="x-header" data-target="#status-collapse" role="button" data-toggle="collapse" tabindex="0"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Text here</h5>
+          <div id="statusDiv"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapse" id="phases-collapse">
+      <div class="card">
+        <div class="card-header">
+          <a class="phases-title" data-parent="#phases-collapse" role="button" data-target="#phases-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="#phases-collapse">
+            <span class="esri-icon-notice-triangle" aria-hidden="true"></span><span> Phases</span>
+          </a>
+          <a class="x-header" data-target="#phases-collapse" role="button" data-toggle="collapse" tabindex="0"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Text here</h5>
+          <div id=""></div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
