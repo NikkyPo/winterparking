@@ -28,25 +28,25 @@
       <div class="container-fluid">
       <ul class="tab-menu">
         <li class="active">
-          <a id="test1" class="custom-a" href="#status-collapse" data-toggle="collapse" role="button" tabindex="0" data-target="#status-collapse" aria-haspopup="true">
+          <a id="status-button" class="status-button custom-a" href="#status-collapse" data-toggle="collapse" role="button" tabindex="0" data-target="#status-collapse" aria-haspopup="true">
             <p class="icon esri-icon-notice-triangle"></p>
             <span>Status</span>
           </a>
         </li>
         <li>
-          <a id="test2" class="custom-a" href="#phases-collapse" data-toggle="collapse" role="menuitem" tabindex="0" data-target="#phases-collapse" aria-haspopup="true">
+          <a id="phases-button" class="phases-button custom-a" href="#phases-collapse" data-toggle="collapse" role="menuitem" tabindex="0" data-target="#phases-collapse" aria-haspopup="true">
             <p class="icon esri-icon-layer-list"></p>
             <span>Phases</span>
           </a>
         </li>
         <li>
-          <a class="custom-a" data-toggle="collapse" role="menuitem" tabindex="0" data-target="#panelMap" aria-haspopup="true">
+          <a class="map-button custom-a" data-toggle="collapse" role="menuitem" tabindex="0" data-target="#panelMap" aria-haspopup="true">
             <p class="icon esri-icon-basemap"></p>
             <span>Map Type</span>
           </a>
         </li>
         <li>
-          <a class="custom-a" data-toggle="collapse" role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true">
+          <a class="help-button custom-a" data-toggle="collapse" role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true">
             <p class="icon esri-icon-question"></p>
             <span>Help</span>
           </a>
@@ -58,14 +58,14 @@
     <div class="collapse" id="status-collapse">
       <div class="card">
         <div class="card-header status-header">
-          <a class="status-title" role="button" data-target="#status-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="#status-collapse">
+          <a class="change-color status-title" role="button" data-target="#status-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="#status-collapse">
             <span class="esri-icon-layer-list" aria-hidden="true"></span><span> Current Status</span>
           </a>
-          <a class="x-header" data-target="#status-collapse" role="button" data-toggle="collapse" tabindex="0"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+          <a data-target="#status-collapse" role="button" data-toggle="collapse" tabindex="0"><span class="x-header change-color esri-icon esri-icon-close" aria-hidden="true"></span></a>
         </div>
         <div class="card-body">
           <h5 class="card-title">Text here</h5>
-          <div id="statusDiv"></div>
+          <div id="status-div"></div>
         </div>
       </div>
     </div>
@@ -73,14 +73,14 @@
     <div class="collapse" id="phases-collapse">
       <div class="card">
         <div class="card-header">
-          <a class="phases-title" data-parent="#phases-collapse" role="button" data-target="#phases-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="#phases-collapse">
+          <a class="change-color phases-title" data-parent="#phases-collapse" role="button" data-target="#phases-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="#phases-collapse">
             <span class="esri-icon-notice-triangle" aria-hidden="true"></span><span> Phases</span>
           </a>
-          <a class="x-header" data-target="#phases-collapse" role="button" data-toggle="collapse" tabindex="0"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+          <a data-target="#phases-collapse" role="button" data-toggle="collapse" tabindex="0"><span class="x-header change-color esri-icon esri-icon-close" aria-hidden="true"></span></a>
         </div>
         <div class="card-body">
           <h5 class="card-title">Text here</h5>
-          <div id=""></div>
+          <div id="layer-div"></div>
         </div>
       </div>
     </div>
