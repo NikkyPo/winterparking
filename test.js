@@ -1,3 +1,5 @@
+window.onload = function(){
+
 // Load Modules
 require([
   "esri/WebMap",
@@ -7,7 +9,9 @@ require([
   "esri/widgets/BasemapToggle",
   "esri/widgets/Search",
   "esri/widgets/Locate",
-], function (WebMap, MapView, Home, Legend, BasemapGallery, Search, Locate) {
+  "esri/widgets/LayerList",
+
+], function (WebMap, MapView, Home, Legend, BasemapGallery, Search, Locate, LayerList,) {
   ///// Web Map
   var map = new WebMap({
     portalItem: {
@@ -86,30 +90,101 @@ require([
 
   //////// Legend
   var legendWidget = new Legend({
-    container: "statusDiv",
+    container: "status-div",
     view: view,
   });
+
+  //////// Layer List (phases)
+  var layerList = new LayerList({
+    container: "layer-div",
+    view: view,
+  });
+
 });
 
 
+var $buttonArray = [];
+$(".tab-menu li a").each(function(){
+  var menu = $(this).attr('href');
+  $buttonArray.push(menu)
+});
+
+$(".tab-menu li a").click(function(){
+    var button = this.classList[0];
+    switch (button) {
+      case 'status-button':
+        if (button.contains("collapsed") || button.children[0].style.color === ""){
+          $('#phases-collapse').collapse('hide');
+          for (var i=0; i < this.children.length; i++){
+            this.children[i].style.color = "black";
+          }
+        } else {
+          for (var i=0; i < button.children.length; i++){
+            button.children[i].style.color = "black";
+          }
+          button.children[0].style.color = "#666";
+          button.children[1].style.color = "#666";
+        }
+        console.log(button)
+        break;
+      case 'phases-button':
+        console.log(button)
+        break;
+      case 'map-button':
+        console.log(button)
+        break;
+      case 'help-button':
+        console.log(button)
+        break;
+    }
+})
+
 // Control cards
-document.addEventListener(
-  "click",
-  function (event) {
-    // Log the clicked element in the console
-    console.log(event.target);
+// var statusButton = document.getElementById("status-button")
+//
+// statusButton.addEventListener("click", function() {
+//   if (statusButton.classList.contains("collapsed") || statusButton.children[0].style.color === "") {
+//     $('#phases-collapse').collapse('hide');
+//     for (var i=0; i < this.children.length; i++){
+//       this.children[i].style.color = "black";
+//     }
+//   } else {
+//     for (var i=0; i < statusButton.children.length; i++){
+//       statusButton.children[i].style.color = "black";
+//     }
+//     statusButton.children[0].style.color = "#666";
+//     statusButton.children[1].style.color = "#666";
+//   }
+// }, false);
+//
+// // Resets the buttons to grey by clicking card header title and X.
+// document.querySelectorAll('.change-color').forEach(function(item) {
+//   item.addEventListener('click', function() {
+//     statusButton.children[0].className = "#666";
+//     statusButton.children[1].className = "#666";
+//   });
+// });
 
-    // If the clicked element doesn't have the right selector, bail
-    if (!event.target.matches(".click-me")) return;
-  },
-  false
-);
+};
+
+// document.addEventListener(
+//   "click",
+//   function (event) {
+//     // Log the clicked element in the console
+//     console.log(event.target);
+//
+//     // If the clicked element doesn't have the right selector, bail
+//     if (!event.target.matches(".click-me")) return;
+//   },
+//   false
+// );
 
 
-    $('#test1').on('click', function(e) {
-      console.log("works")
-        $('#phases-collapse .collapse').removeAttr("data-parent").collapse('show');
-    });
+
+    // $('#test1').on('click', function(e) {
+    //   console.log("works")
+    //     $('#phases-collapse .collapse').removeAttr("data-parent").collapse('show');
+    // });
     // $('#toggleAccordionHide').on('click', function(e) {
     //     $('#accordion .collapse').attr("data-parent","#accordion").collapse('hide');
     // });
