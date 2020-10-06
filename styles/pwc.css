@@ -1,0 +1,145 @@
+html, body, #viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Avenir Next W00","Avenir Next",Avenir;
+}
+.slidemenu {
+  position: absolute;
+  display: flex;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 1;
+  color: white;
+  background: white;
+  font-size: 20px;
+  overflow: hidden;
+}
+
+/* Tab styles*/
+.tab-desktop {
+  width: 100%;
+}
+.tab-menu {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.tab-menu li {
+  width: 25%;
+  text-align: center;
+  display: block;
+  float: left;
+  padding: 7px 0;
+}
+
+.tab-menu li a {
+  display: block; /* needed to give your ul li a dispaly of block so that they cover  100% the width of the LI by defaul (do NOT give this rule  explicit width!!*/
+  padding: 1px;
+  color: #666;
+  font-size: 11px;
+  text-decoration: none;
+  outline: none;
+}
+
+
+/* Button color styles */
+ul li .active {
+  color: red;
+  font-weight: 800;
+  outline: none;
+}
+
+ul li .none{
+  color: black;
+  font-weight: 800;
+  outline: none;
+}
+
+/* Icon style */
+.slidemenu li .icon {
+  font-size: 18px;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  line-height: 30px;
+  border-radius: 50%;
+}
+
+/* Card customization */
+ /* Reverses card collapse direction */
+#status-collapse, #phases-collapse, #map-collapse, #help-collapse {
+  position: absolute;
+  bottom: 60px;
+  width: 100%;
+}
+.card {
+  max-height: 350px;
+}
+
+/* Custom cards for 'Current Status' */
+.status-header, .status-title {
+  background-color: red;
+  color: white;
+  text-decoration: none;
+}
+
+.x-header {
+  float:right;
+  color: white;
+  text-decoration: none;
+}
+
+
+/* Prevents content overlapping header on scroll */
+.card-header {
+  position: sticky;
+  top: 0;
+}
+
+.card-body {
+  overflow: auto;
+}
+
+/* Esri attribution styling */
+.esri-attribution {
+  font-size: 7px;
+  background-color: rgba(255,255,255,0);
+}
+
+
+/* Carousel  */
+.carousel-indicators {
+	 position: static;
+}
+ .carousel-indicators .item.active {
+	 background: transparent;
+}
+ .carousel-indicators .item.active img {
+	 opacity: 0.7;
+}
+
+/* Desktop View (starts at iPad Pro size) */
+@media (min-width: 769px) {
+  .container-fluid {
+    max-width: 700px;;
+  }
+  #status-collapse, #phases-collapse, #map-collapse, #help-collapse {
+    top: 75px;
+    left: 60px;
+    max-width: 350px;
+  }
+  .slidemenu {
+    top: 0;
+  }
+  #viewDiv {
+    padding-top: 60px;
+    padding-bottom: 0;
+  }
+  .card {
+    max-height: 700px;
+  }
+}
