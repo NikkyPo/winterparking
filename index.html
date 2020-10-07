@@ -63,59 +63,56 @@
     <!-- Current Status Card -->
     <div class="show" id="status-collapse">
       <div class="card text-center">
-        <div class="card-header status-header">
+        <div class="card-header status-header px-1">
           <a class="text-center hange-color status-title" role="button" data-target="#status-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="#status-collapse">
             <span class="esri-icon-notice-triangle" aria-hidden="true"></span><span class="emergency"> SNOW EMERGENCY DECLARED</span><br><span class="phase">[name of phase] Active until [time]</span>
           </a>
           <a data-target="#status-collapse" role="button" data-toggle="collapse" tabindex="0"><span class="x-header change-color esri-icon esri-icon-close" aria-hidden="true"></span></a>
         </div>
-        <div class="card-body pr-1 pl-1 pt-1">
+        <div class="card-body pr-1 pl-1 pt-2">
 
 
-          <div id="carouselExampleIndicators" class="carousel slide" data-interval="false">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <div id="status-div"></div>
-              </div>
-              <div class="carousel-item">
-                <h5 class="card-title">Day Plow Route</h5>
-                <p>Layer Legend</p>
-                <p>Time information</p>
-              </div>
-              <div class="carousel-item">
-                <h5 class="card-title">Night Plow Route</h5>
-                <p>Layer Legend</p>
-                <p>Time information</p>
-              </div>
-              <div class="carousel-item">
-                <h5 class="card-title">Clean Up Phase</h5>
-                <p>Layer Legend</p>
-                <p>Time information</p>
-              </div>
-            </div>
-              <div class="row carousel-indicators">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                  <button data-target="#carouselExampleIndicators" data-slide-to="0" type="button" class="btn btn-outline-dark btn-sm active">
-                    <svg class="" width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-check-circle-fill" fill="green" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                    </svg>  Normal Parking
-                  </button>
-                  <button data-target="#carouselExampleIndicators" data-slide-to="1" type="button" class="btn btn-outline-dark waves-effect btn-rounded btn-sm">
-                    <svg class="" width="1.5em" height="1.5em"  viewBox="0 0 16 16" class="bi bi-brightness-high-fill" fill="#ffcc00" xmlns="http://www.w3.org/2000/svg">
+          <div id="layer-carousel" class="carousel slide" data-interval="false">
+                <div class=" btn-group btn-group-sm" role="group" aria-label="Layer Buttons">
+                  <div class="carousel-indicators"><button data-target="#layer-carousel" data-slide-to="0" type="button" class="btn btn-outline-dark waves-effect btn-rounded btn-sm">
+                    <svg class="" width="2em" height="2em"  viewBox="0 0 16 16" class="bi bi-moon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M14.53 10.53a7 7 0 0 1-9.058-9.058A7.003 7.003 0 0 0 8 15a7.002 7.002 0 0 0 6.53-4.47z"/>
+                    </svg> Night Plow</button>
+                  <button data-target="#layer-carousel" data-slide-to="1" type="button" class="btn btn-outline-dark waves-effect btn-rounded btn-sm">
+                    <svg class="" width="2em" height="2em"  viewBox="0 0 16 16" class="bi bi-brightness-high-fill" fill="#ffcc00" xmlns="http://www.w3.org/2000/svg">
                       <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
                       <path fill-rule="evenodd" d="M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
                     </svg>  Day Plow</button>
-                    <button data-target="#carouselExampleIndicators" data-slide-to="2" type="button" class="btn btn-outline-dark waves-effect btn-rounded btn-sm">
-                      <svg class="" width="1.5em" height="1.5em"  viewBox="0 0 16 16" class="bi bi-moon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M14.53 10.53a7 7 0 0 1-9.058-9.058A7.003 7.003 0 0 0 8 15a7.002 7.002 0 0 0 6.53-4.47z"/>
-                      </svg>  Night Plow</button>
-                      <button data-target="#carouselExampleIndicators" data-slide-to="3" type="button" class="btn btn-outline-dark waves-effect btn-rounded btn-sm">
-                        <svg class="" width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-cone-striped" fill="orange" xmlns="http://www.w3.org/2000/svg">
+                      <button data-target="#layer-carousel" data-slide-to="2" type="button" class="btn btn-outline-dark waves-effect btn-rounded btn-sm">
+                        <svg class="" width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-cone-striped" fill="orange" xmlns="http://www.w3.org/2000/svg">
                           <path d="M9.97 4.88l.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z"/>
-                        </svg> Clean Up
+                        </svg>  Clean Up
+                      </button>
+                      <button data-target="#layer-carousel" data-slide-to="3" type="button" class="btn btn-outline-dark btn-sm active">
+                        <svg class="" width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-check-circle-fill" fill="green" xmlns="http://www.w3.org/2000/svg">
+                          <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>  Normal Parking
                       </button>
                     </div>
                 </div>
+
+                <div class="carousel-inner">
+                  <div class="carousel-item">
+                    <p>Layer Legend</p>
+                  </div>
+                  <div class="carousel-item">
+                    <p>Layer Legend</p>
+                  </div>
+                  <div class="carousel-item">
+                    <p>Layer Legend</p>
+                  </div>
+                  <div class="carousel-item active">
+                    <p>Layer Legend</p>
+                    <!-- <div id="status-div"></div> -->
+                  </div>
+                </div>
+                <a data-slide="prev" href="#layer-carousel" class="left carousel-control"><i class="fa fa-chevron-left"></i></a>
+                <a data-slide="next" href="#layer-carousel" class="right carousel-control"><i class="fa fa-chevron-right"></i></a>
               </div>
             </div>
           </div>
