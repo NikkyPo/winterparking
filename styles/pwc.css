@@ -29,15 +29,16 @@ html, body, #viewDiv {
 }
 
 .tab-menu li {
-  width: 25%;
+  width: 33%;
   text-align: center;
   display: block;
   float: left;
   padding: 7px 0;
 }
 
+/* Display block so tab bar fills 100% width of li */
 .tab-menu li a {
-  display: block; /* needed to give your ul li a dispaly of block so that they cover  100% the width of the LI by defaul (do NOT give this rule  explicit width!!*/
+  display: block;
   padding: 1px;
   color: #666;
   font-size: 11px;
@@ -45,18 +46,13 @@ html, body, #viewDiv {
   outline: none;
 }
 
-
 /* Button color styles */
-ul li .active {
-  color: red;
-  font-weight: 800;
-  outline: none;
-}
-
 ul li .none{
   color: black;
   font-weight: 800;
   outline: none;
+  /* border-radius: 50%;
+  background: #000; */
 }
 
 /* Icon style */
@@ -77,7 +73,7 @@ ul li .none{
   width: 100%;
 }
 .card {
-  max-height: 350px;
+  max-height: 250px;
 }
 
 /* Custom cards for 'Current Status' */
@@ -85,6 +81,7 @@ ul li .none{
   background-color: red;
   color: white;
   text-decoration: none;
+  height:
 }
 
 .x-header {
@@ -93,15 +90,32 @@ ul li .none{
   text-decoration: none;
 }
 
+span .phase {
+    float: left;
+    clear: left;
+    font-size: 10px;
+    position: relative;
+}
 
 /* Prevents content overlapping header on scroll */
 .card-header {
   position: sticky;
   top: 0;
+  height: 70px;
 }
 
 .card-body {
   overflow: auto;
+}
+
+.emergency {
+  font-weight: 800;
+}
+.phase {
+  font-size: 15px;
+}
+.btn-group {
+  font-family: "Avenir Next W00","Avenir Next",Avenir;
 }
 
 /* Esri attribution styling */
@@ -118,12 +132,15 @@ ul li .none{
  .carousel-indicators .item.active {
 	 background: transparent;
 }
- .carousel-indicators .item.active img {
+ /* .carousel-indicators .item.active svg {
 	 opacity: 0.7;
+} */
+.btn-group-sm>.btn, .btn-sm {
+  font-size: .75em;
 }
 
 /* Desktop View (starts at iPad Pro size) */
-@media (min-width: 769px) {
+@media (min-width: 769px) and (min-height: 500px){
   .container-fluid {
     max-width: 700px;;
   }
@@ -142,4 +159,5 @@ ul li .none{
   .card {
     max-height: 700px;
   }
+
 }
