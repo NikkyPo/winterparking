@@ -125,7 +125,7 @@ span .phase {
 /* Carousel  */
 .carousel-indicators {
 	 position: static;
-   margin: 10px;
+   margin: 2%;
 }
  .carousel-indicators .item.active {
 	 background: transparent;
@@ -135,6 +135,9 @@ span .phase {
 } */
 .btn-group-sm>.btn, .btn-sm {
   font-size: .8em;
+}
+.btn-outline-dark {
+  border-color: #ddd;
 }
 
 /* Desktop View (starts at iPad Pro size) */
