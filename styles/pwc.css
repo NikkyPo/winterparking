@@ -108,11 +108,8 @@ span .phase {
   overflow: auto;
 }
 
-.emergency {
-  font-weight: 800;
-}
 .phase {
-  font-size: 15px;
+  font-size: 14px;
 }
 .btn-group {
   font-family: "Avenir Next W00","Avenir Next",Avenir;
@@ -128,6 +125,7 @@ span .phase {
 /* Carousel  */
 .carousel-indicators {
 	 position: static;
+   margin: 10px;
 }
  .carousel-indicators .item.active {
 	 background: transparent;
@@ -136,7 +134,7 @@ span .phase {
 	 opacity: 0.7;
 } */
 .btn-group-sm>.btn, .btn-sm {
-  font-size: .75em;
+  font-size: .8em;
 }
 
 /* Desktop View (starts at iPad Pro size) */
