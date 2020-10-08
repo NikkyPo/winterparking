@@ -106,78 +106,77 @@ $(document).ready(function () {
   // Remove css classes from select buttons
   $('.phases-button, .map-button, .help-button').removeClass('none');
 
-  $('.tab-menu li a').click(function () {
-    var button = this.classList[0];
-    switch (button) {
-      case 'status-button':
-        $('.phases-button, .map-button, .help-button').removeClass('none');
-        $('#phases-collapse, #map-collapse, #help-collapse').collapse('hide');
+  $(".tab-menu li a").click(function(){
+      var button = this.classList[0];
+      switch (button) {
+        case 'status-button':
+          $('.phases-button, .map-button, .help-button').removeClass('none');
+          $('#phases-collapse, #map-collapse, #help-collapse').collapse('hide');
 
-        if (
-          $(this).attr('aria-expanded') === 'true' ||
-          $(this).hasClass('none')
-        ) {
-          console.log('close');
-          $('.status-button').removeClass('none');
-        } else if ($(this).attr('aria-expanded') === 'false') {
-          console.log('open');
-          $('.status-button').addClass('none');
-        } else {
-          console.log('not working');
-        }
-        break;
+          if ($(this).attr("aria-expanded") === "true" || $(this).hasClass("active")){
+            console.log("close")
+            $('.status-button').removeClass('active');
+          } else if ($(this).attr("aria-expanded") === "false"){
+            console.log("open")
+            $('.status-button').addClass('active');
+          } else {
+            console.log("not working")
+          }
+          break;
 
-      case 'phases-button':
-        $(this).addClass('none');
-        $('.status-button, .map-button, .help-button').removeClass('none');
-        $('#status-collapse, #map-collapse, #help-collapse').collapse('hide');
+        case 'phases-button':
+          $(this).addClass("none")
+          $('.status-button').removeClass('active');
+          $('.map-button, .help-button').removeClass('none');
+          $('#status-collapse, #map-collapse, #help-collapse').collapse('hide');
 
-        if ($(this).attr('aria-expanded') === 'true') {
-          console.log('close');
+        if ($(this).attr("aria-expanded") === "true"){
+          console.log("close")
           $('.phases-button').removeClass('none');
-        } else if ($(this).attr('aria-expanded') === 'false') {
-          console.log('open');
-          $('.phases-button').addClass('none');
+        } else if ($(this).attr("aria-expanded") === "false"){
+          console.log("open")
+            $('.phases-button').addClass('none');
         } else {
-          console.log('not working');
+          console.log("not working")
         }
-        break;
+          break;
 
-      case 'map-button':
-        $(this).addClass('none');
-        $('.status-button, .phases-button, .help-button').removeClass('none');
-        $('#status-collapse, #phases-collapse, #help-collapse').collapse(
-          'hide'
-        );
+        case 'map-button':
+          $(this).addClass("none")
+          $('.status-button').removeClass('active');
+          $('.phases-button, .help-button').removeClass('none');
+          $('#status-collapse, #phases-collapse, #help-collapse').collapse('hide');
 
-        if ($(this).attr('aria-expanded') === 'true') {
-          console.log('close');
+        if ($(this).attr("aria-expanded") === "true"){
+          console.log("close")
           $('.map-button').removeClass('none');
-        } else if ($(this).attr('aria-expanded') === 'false') {
-          console.log('open');
+        } else if ($(this).attr("aria-expanded") === "false"){
+          console.log("open")
           $('.map-button').addClass('none');
         } else {
-          console.log('not working');
+          console.log("not working")
         }
-        break;
+          break;
 
-      case 'help-button':
-        $(this).addClass('none');
-        $('.status-button, .phases-button, .map-button').removeClass('none');
-        $('#status-collapse, #phases-collapse, #map-collapse').collapse('hide');
+        case 'help-button':
+          $(this).addClass("none")
+          $('.status-button').removeClass('active');
+          $('.phases-button, .map-button').removeClass('none');
+          $('#status-collapse, #phases-collapse, #map-collapse').collapse('hide');
 
-        if ($(this).attr('aria-expanded') === 'true') {
-          console.log('close');
+        if ($(this).attr("aria-expanded") === "true"){
+          console.log("close")
           $('.help-button').removeClass('none');
-        } else if ($(this).attr('aria-expanded') === 'false') {
-          console.log('open');
+        } else if ($(this).attr("aria-expanded") === "false"){
+          console.log("open")
           $('.help-button').addClass('none');
         } else {
-          console.log('not working');
+          console.log("not working")
         }
-        break;
-    }
+          break;
+      }
   });
+
 
   // Resets the buttons to grey by clicking card header title and X.
   $('.change-color').click(function () {
