@@ -195,3 +195,7 @@ document.addEventListener(
   },
   false
 );
+
+document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+});
