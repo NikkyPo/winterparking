@@ -182,13 +182,6 @@ $(document).ready(function () {
   $('.change-color').click(function () {
     $('.status-button, .phases-button, .map-button, .help-button').removeClass('none');
   });
-
-  // document.querySelectorAll('.change-color').forEach(function(item) {
-  //   item.addEventListener('click', function() {
-  //     statusButton.children[0].className = "#666";
-  //     statusButton.children[1].className = "#666";
-  //   });
-  // });
 });
 
 document.addEventListener(
@@ -202,3 +195,54 @@ document.addEventListener(
   },
   false
 );
+
+var startX
+var startY
+var endX
+var endY
+var treshold = 100; //this sets the minimum swipe distance, to avoid noise and to filter actual swipes from just moving fingers
+var style = document.querySelector(".status-header"); //Only for design purposes
+console.log(style)
+
+//Function to handle swipes
+function handleTouch(start,end, cbL, cbR){
+  //calculate the distance on x-axis and o y-axis. Check wheter had the great moving ratio.
+  var xDist = endX - startX;
+  var yDist = endY - startY;
+  console.log(xDist);
+  console.log(yDist);
+   if(endX - startX < 0){
+      cbL();
+    }else{
+      cbR();
+    }
+}
+
+//writing the callback fn()
+var up = () => {
+  $('#status-collapse').collapse('show');
+}
+var down = () =>{
+  $('#status-collapse').collapse('hide');
+}
+
+//configs the elements on load
+window.onload = function(){
+ window.addEventListener('touchstart', function(event){
+   //console.log(event);
+   startX = event.touches[0].clientX;
+   startY = event.touches[0].clientY;
+   //console.log(`the start is at X: ${startX}px and the Y is at ${startY}px`)
+
+ })
+
+  window.addEventListener('touchend', function(event){
+   //console.log(event);
+   endX = event.changedTouches[0].clientX;
+   endY = event.changedTouches[0].clientY;
+   //console.log(`the start is at X: ${endX}px and the Y is at ${endY}px`)
+
+   handleTouch(startX, endX, up, down)
+
+ })
+}
