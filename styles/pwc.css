@@ -3,12 +3,11 @@ html, body, #viewDiv {
   margin: 0;
   height: 100%;
   width: 100%;
-  font-family: "Avenir Next W00","Avenir Next",Avenir;
+  font-family: "Avenir Next W00", "Avenir Next", Avenir;
 }
 
 /* ------------------------------------------------------- */
 /* ---- Bottom Tab bar customization Styles ---- */
-
 /* Nav bar styling for small to medium screens */
 .slidemenu {
   position: absolute;
@@ -35,8 +34,8 @@ html, body, #viewDiv {
   text-align: center;
   display: block;
   float: left;
-  padding-top: 7px;
-  padding-bottom: 9px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 /* Display block so tab bar fills 100% width of li */
@@ -50,7 +49,7 @@ html, body, #viewDiv {
 }
 
 /* Button color styles */
-ul li .none{
+ul li .none {
   color: black;
   font-weight: bold;
   outline: none;
@@ -73,36 +72,19 @@ ul li .active {
 /* ------------------------------------------------------- */
 /* ---- Card customization ---- */
 
- /* Reverses card collapse direction */
+/* Reverses card collapse direction */
 #status-collapse, #phases-collapse, #map-collapse, #help-collapse {
   position: absolute;
   bottom: 56px;
   width: 100%;
 }
+
 .card {
-  max-height: 250px;
-  border-bottom: 1px solid rgba(0,0,0,.125);
+  max-height: 300px;
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
   border-left: none;
   border-right: none;
   border-top: none;
-}
-
-/* Custom cards for 'Current Status' */
-.status-header, .status-title {
-  background-color: red;
-  color: white;
-  text-decoration: none;
-}
-.x-header {
-  float:right;
-  color: white;
-  text-decoration: none;
-}
-span .phase {
-    float: left;
-    clear: left;
-    font-size: 10px;
-    position: relative;
 }
 
 /* Prevents content overlapping header on scroll */
@@ -111,81 +93,136 @@ span .phase {
   top: 0;
   height: 70px;
 }
-.emergency {
-  font-weight: bold;
-}
 .card-body {
   overflow: auto;
+}
+
+/* -- Custom cards for 'Current Status' -- */
+.status-header {
+  background-color: red;
+}
+.status-collapse-heading, .status-collapse-heading:hover, .status-collapse-heading:focus, .status-collapse-heading:active, .status-collapse-heading:visited {
+  color: white;
+  text-decoration: none;
+}
+/* Carrot transition */
+.card-header .fa {
+  transition: .3s transform ease-in-out;
+}
+.card-header .collapsed .fa {
+  transform: rotate(180deg);
+}
+
+.emergency {
+  font-weight: bold;
 }
 .phase {
   font-size: 14px;
 }
-.btn-group {
-  font-family: "Avenir Next W00","Avenir Next",Avenir;
+
+/* Tabs */
+#layer-carousel {
+  font-size: 15px;
 }
+
+#test {
+  font-size: 15px;
+}
+
+/* -- Custom cards for 'Phase'-- */
+/* span .phase {
+  float: left;
+  clear: left;
+  font-size: 10px;
+  position: relative;
+} */
+
+
+/* .btn-group {
+  font-family: "Avenir Next W00", "Avenir Next", Avenir;
+} */
+
 
 /* ------------------------------------------------------- */
 /* Esri attribution styling */
 .esri-attribution {
   font-size: 7px;
-  background-color: rgba(255,255,255,0);
+  background-color: rgba(255, 255, 255, 0);
 }
-
 
 /* ------------------------------------------------------- */
 /* Carousel  */
 .carousel-indicators {
-	 position: static;
-   margin: 2%;
+  position: static;
+  margin: 2%;
 }
- .carousel-indicators .item.active {
-	 background: transparent;
+
+.carousel-indicators .item.active {
+  background: transparent;
 }
- /* .carousel-indicators .item.active svg {
+
+/* .carousel-indicators .item.active svg {
 	 opacity: 0.7;
 } */
 .btn-group-sm>.btn, .btn-sm {
   font-size: .8em;
 }
+
 .btn-outline-dark {
   border-color: #ddd;
 }
 
 /* ------------------------------------------------------- */
 /* ---- Media Queries ---- */
-
 /* Very small screen heights and widths (starts at iPhone 5 and below) */
-@media (max-width: 320px){
+@media (max-width: 320px) {
 
   /* Tab bar */
   .slidemenu {
     height: 50px;
   }
+
   .slidemenu li .icon {
     line-height: 17px;
   }
+
   .tab-menu li {
-    padding-top: 5px;
-    padding-bottom: 8px;
+    padding-top: 6px;
+    padding-bottom: 7px;
   }
 
   /* Cards */
+
+
   #status-collapse, #phases-collapse, #map-collapse, #help-collapse {
     bottom: 50px;
   }
-  #status-collapse > div > div.card-header.status-header.container-fluid > div:nth-child(1) > div.col.pb-1.d-flex.justify-content-center {
+
+  #status-collapse>div>div.card-header.status-header.container-fluid>div:nth-child(1)>div.col.pb-1.d-flex.justify-content-center {
     font-size: 13px;
     margin: 1px;
     padding: 1px
   }
+
   .phase {
+    font-size: 12px;
+  }
+  .emergency {
     font-size: 13px;
+  }
+
+  /* Tabs */
+  #layer-carousel {
+    font-size: 14px;
+  }
+  #test {
+    font-size: 14px;
   }
 }
 
-
 /* Desktop View (starts at iPad Pro size) */
-@media (min-width: 769px) and (min-height: 500px){
+@media (min-width: 769px) and (min-height: 500px) {
+
   /* Map div */
   #viewDiv {
     padding-top: 70px;
@@ -197,19 +234,25 @@ span .phase {
     top: 0;
     height: 70px;
   }
+
   .container-fluid {
-    max-width: 700px;;
+    max-width: 700px;
+    ;
   }
+
   .card {
     max-height: 700px;
   }
+
   .slidemenu li .icon {
     line-height: 30px;
   }
+
   .tab-menu li {
     padding-top: 10px;
     padding-bottom: 7px;
   }
+
   .tab-menu li a {
     font-size: 14px;
   }
