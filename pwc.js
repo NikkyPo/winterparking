@@ -182,6 +182,13 @@ $(document).ready(function () {
   $('.change-color').click(function () {
     $('.status-button, .phases-button, .map-button, .help-button').removeClass('none');
   });
+
+  // document.querySelectorAll('.change-color').forEach(function(item) {
+  //   item.addEventListener('click', function() {
+  //     statusButton.children[0].className = "#666";
+  //     statusButton.children[1].className = "#666";
+  //   });
+  // });
 });
 
 document.addEventListener(
@@ -195,7 +202,3 @@ document.addEventListener(
   },
   false
 );
-
-document.addEventListener('gesturestart', function (e) {
-    e.preventDefault();
-});
