@@ -10,7 +10,9 @@ $(document).ready(function () {
     'esri/widgets/Locate',
     'esri/widgets/LayerList',
     'esri/widgets/BasemapGallery',
-  ], function (WebMap, MapView, Home, Legend, BasemapToggle, Search, Locate, LayerList, BasemapGallery) {
+    "esri/core/watchUtils",
+    "dojo/domReady!"
+  ], function (WebMap, MapView, Home, Legend, BasemapToggle, Search, Locate, LayerList, BasemapGallery, watchUtils) {
     ///// Web Map
     var map = new WebMap({
       portalItem: {
@@ -40,7 +42,7 @@ $(document).ready(function () {
     var marker = {
       type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
       color: 'red',
-      size: '20px',
+      size: '18px',
       outline: {
       // autocasts as new SimpleLineSymbol()
       color: [128, 0, 0, 0.5],
@@ -89,17 +91,28 @@ $(document).ready(function () {
       view: view,
     });
 
+    //////// Basemap Gallery
+    var basemapGallery = new BasemapGallery({
+      container: 'map-div',
+      view: view,
+    });
+
+    watchUtils.once(basemapGallery.source.basemaps,"length", function(state){
+      setTimeout(function(){
+        basemapGallery.source.basemaps.splice(6, 20);
+        basemapGallery.source.basemaps.splice(0, 1);
+        basemapGallery.source.basemaps.splice(1, 2);
+}, 500);
+
+    });
+
+
     //////// Layer List (phases)
     var layerList = new LayerList({
       container: 'phases-div',
       view: view,
     });
 
-    //////// Basemap Gallery
-    var basemapGallery = new BasemapGallery({
-      container: 'map-div',
-      view: view,
-    });
   });
 
   ///// Card button + pop-up control
@@ -113,39 +126,14 @@ $(document).ready(function () {
           $('.phases-button, .map-button, .help-button').removeClass('none');
           $('#phases-collapse, #map-collapse, #help-collapse').collapse('hide');
 
-          if ($(this).attr("aria-expanded") === "true" || $(this).hasClass("active")){
-            console.log("close")
-            $('.status-button').removeClass('active');
-          } else if ($(this).attr("aria-expanded") === "false"){
-            console.log("open")
-            $('.status-button').addClass('active');
-          } else {
-            console.log("not working")
-          }
-          break;
-
-        case 'phases-button':
-          $(this).addClass("none")
-          $('.status-button').removeClass('active');
-          $('.map-button, .help-button').removeClass('none');
-          $('#status-collapse, #map-collapse, #help-collapse').collapse('hide');
-
-        if ($(this).attr("aria-expanded") === "true"){
-          console.log("close")
-          $('.phases-button').removeClass('none');
-        } else if ($(this).attr("aria-expanded") === "false"){
-          console.log("open")
-            $('.phases-button').addClass('none');
-        } else {
-          console.log("not working")
-        }
+          $('#collapse-header').collapse('toggle');
           break;
 
         case 'map-button':
           $(this).addClass("none")
-          $('.status-button').removeClass('active');
+          // $('.status-button').removeClass('active');
           $('.phases-button, .help-button').removeClass('none');
-          $('#status-collapse, #phases-collapse, #help-collapse').collapse('hide');
+          $('#collapse-header, #phases-collapse, #help-collapse').collapse('hide');
 
         if ($(this).attr("aria-expanded") === "true"){
           console.log("close")
@@ -160,9 +148,9 @@ $(document).ready(function () {
 
         case 'help-button':
           $(this).addClass("none")
-          $('.status-button').removeClass('active');
+          // $('.status-button').removeClass('active');
           $('.phases-button, .map-button').removeClass('none');
-          $('#status-collapse, #phases-collapse, #map-collapse').collapse('hide');
+          $('#collapse-header, #phases-collapse, #map-collapse').collapse('hide');
 
         if ($(this).attr("aria-expanded") === "true"){
           console.log("close")
@@ -180,15 +168,8 @@ $(document).ready(function () {
 
   // Resets the buttons to grey by clicking card header title and X.
   $('.change-color').click(function () {
-    $('.status-button, .phases-button, .map-button, .help-button').removeClass('none');
+    $('.phases-button, .map-button, .help-button').removeClass('none');
   });
-
-  // document.querySelectorAll('.change-color').forEach(function(item) {
-  //   item.addEventListener('click', function() {
-  //     statusButton.children[0].className = "#666";
-  //     statusButton.children[1].className = "#666";
-  //   });
-  // });
 });
 
 document.addEventListener(
