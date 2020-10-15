@@ -55,7 +55,6 @@ ul li .none {
   outline: none;
 }
 ul li .active {
-  color: red;
   font-weight: bold;
   outline: none;
 }
@@ -73,43 +72,35 @@ ul li .active {
 /* ---- Card customization ---- */
 
 /* Reverses card collapse direction */
-#status-collapse, #phases-collapse, #map-collapse, #help-collapse {
+#status-collapse, #map-collapse, #help-collapse {
   position: absolute;
   bottom: 56px;
   width: 100%;
 }
 
 .card {
-  max-height: 300px;
+  max-height: 250px;
   border-radius: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, .125);
+  /* border-bottom: 1px solid rgba(0, 0, 0, .125); */
   border-left: none;
   border-right: none;
   border-top: none;
 }
 
 /* Prevents content overlapping header on scroll */
-.card-header {
-  position: sticky;
-  top: 0;
-}
-
 .card-body {
   overflow: auto;
 }
 
 /* -- Custom cards for 'Current Status' -- */
 .status-header {
-  background-color: red;
   height: 70px;
 }
 .status-collapse-heading, .status-collapse-heading:hover, .status-collapse-heading:focus, .status-collapse-heading:active, .status-collapse-heading:visited {
   color: white;
   text-decoration: none;
 }
-.card-header:first-child {
-  border-radius: 0;
-}
+
 /* Carrot transition */
 .card-header .fa {
   transition: .3s transform ease-in-out;
@@ -118,10 +109,10 @@ ul li .active {
   transform: rotate(180deg);
 }
 
-.emergency {
+#emergency {
   font-weight: bold;
 }
-.phase {
+#phase {
   font-size: 14px;
 }
 
@@ -132,12 +123,13 @@ ul li .active {
 }
 
 /* -- Custom cards for 'Current Status' -- */
-.status-header {
-  background-color: red;
-}
 .status-collapse-heading, .status-collapse-heading:hover, .status-collapse-heading:focus, .status-collapse-heading:active, .status-collapse-heading:visited {
   color: white;
   text-decoration: none;
+}
+
+.accordion>.card>.card-header {
+    margin-bottom: 0;
 }
 
 
@@ -147,8 +139,7 @@ ul li .active {
 }
 
 .material-icons {
-  vertical-align: middle;
-  margin-right: 5px;
+  margin: 1px;
 }
 
 
@@ -161,9 +152,6 @@ ul li .active {
 .esri-legend__service {
   padding-bottom: 0;
 }
-.esri-legend__layer-body {
-  margin-left: 40%;
-}
 
 /* ------------------------------------------------------- */
 /* Carousel  */
@@ -172,13 +160,14 @@ ul li .active {
   margin: 2%;
 }
 
+.carousel-item {
+  font-size: 14px;
+}
+
 .carousel-indicators .item.active {
   background: transparent;
 }
 
-/* .carousel-indicators .item.active svg {
-	 opacity: 0.7;
-} */
 .btn-group-sm>.btn, .btn-sm {
   font-size: .8em;
 }
@@ -208,21 +197,14 @@ ul li .active {
 
   /* Cards */
 
-
-  #status-collapse, #phases-collapse, #map-collapse, #help-collapse {
+  #status-collapse, #map-collapse, #help-collapse {
     bottom: 50px;
   }
 
-  #status-collapse>div>div.card-header.status-header.container-fluid>div:nth-child(1)>div.col.pb-1.d-flex.justify-content-center {
-    font-size: 13px;
-    margin: 1px;
-    padding: 1px
-  }
-
-  .phase {
+  #phase {
     font-size: 12px;
   }
-  .emergency {
+  #emergency {
     font-size: 13px;
   }
 
@@ -230,8 +212,12 @@ ul li .active {
   .btn-group {
     font-size: 14px;
   }
-  #test {
-    font-size: 14px;
+}
+
+/* Very small screen heights and landscape orientation (starts at iPhone 5 and below) */
+@media (min-width: 320px) and (orientation: landscape) {
+  .card {
+    max-height: 215px;
   }
 }
 
@@ -256,7 +242,7 @@ ul li .active {
   }
 
   .card {
-    max-height: 300px;
+    max-height: 450px;
   }
 
   .slidemenu li .icon {
@@ -273,9 +259,10 @@ ul li .active {
   }
 
   /* Cards */
-  #status-collapse, #phases-collapse, #map-collapse, #help-collapse {
+  #status-collapse, #map-collapse, #help-collapse {
     top: 85px;
     left: 60px;
-    max-width: 350px;
+    width: 400px;
+    bottom: auto;
   }
 }
