@@ -23,7 +23,7 @@ $(document).ready(function () {
       portalItem: {
         id: '4c95d0ae349849ddbd50cde3e10971a8',
       },
-      basemap: 'streets-navigation-vector'
+      // basemap: 'streets-navigation-vector'
     });
 
     ///// View
@@ -36,13 +36,13 @@ $(document).ready(function () {
     map.load()
 
     //// Load current data from Admin Console. Post error if problem arises.
-    .then(function(currentStatus){
+    .then(function(evt){
       let url = 'https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json';
       fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
           method: 'get',
           mode: 'no-cors'
       })
-      Promise.resolve().then(function(currentStatus) {
+      Promise.resolve().then(function(evt) {
         // console.log(response)
         obj = [{
     "nid": [
@@ -174,7 +174,6 @@ $(document).ready(function () {
           console.log('There has been an error. Cannot load current data.')
       });
     })
-
     //// load basemaps
     .then(function(){
       //////// Basemap Gallery
@@ -188,12 +187,11 @@ $(document).ready(function () {
           basemapGallery.source.basemaps.splice(6, 20);
           basemapGallery.source.basemaps.splice(0, 1);
           basemapGallery.source.basemaps.splice(1, 2);
-        }, 1000);
+        }, 700);
       });
     })
-
     // Use data from Admin Console
-    .then(function(currentStatus) {
+    .then(function() {
       view.map = map;
 
       // Options for timestamp visualization
@@ -237,19 +235,19 @@ $(document).ready(function () {
           console.log('within nightplow')
           $('#phase').text("Night Plow Active " + toNight + " to " + fromNight);
           $('#nightPlow-button').addClass('active');
-          // $('.carousel-item #cleanUp-text').first().addClass('active');
+          $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
 
         } else if ((currentTime > dayPlowFrom) && (currentTime < dayPlowTo)) {
           console.log('within dayplow')
           $('#phase').text("Day Plow Active " + toDay + " to " + fromDay);
           $('#dayPlow-button').addClass('active');
-          // $('.carousel-item #cleanUp-text').first().addClass('active');
+          $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
 
         } else if ((currentTime > cleanUpFrom) && (currentTime < cleanUpTo)) {
           console.log('within cleanup');
           $('#phase').text("Clean Up Active " + toClean + " to " + fromClean);
           $('#cleanUp-button').addClass('active');
-          // $('.carousel-item #cleanUp-text').first().addClass('active');
+          $('#layer-carousel').find('#cleanUp-active').first().addClass('active');
 
         } else {
           console.log('Outside of times. Put green');
@@ -257,7 +255,7 @@ $(document).ready(function () {
           $('.status-header').css('background-color', 'green');
           $('#emergency').text("NO SNOW EMERGENCY");
           $('#normal-button').addClass('active');
-          // $('.carousel-item #normal-text').first().addClass('active');
+          $('#layer-carousel').find('#normal-active').first().addClass('active');
         }
       }
 
@@ -360,7 +358,7 @@ $(document).ready(function () {
 
         //////// Legend
         var legendWidget = new Legend({
-          container: 'status-div',
+          container: 'normal-div',
           view: view,
           // layerInfos: [{
           //   layer: FeatureLayer
@@ -368,6 +366,19 @@ $(document).ready(function () {
         });
 
         console.log(legendWidget);
+
+        map.on('layers-add-result', function (evt){
+          console.log(evt)
+          buildLayerList(evt)
+        });
+
+        function buildLayerList(evt) {
+           array.forEach(evt.layers, function (layer) {
+               var vis = [];
+               console.log(layer)
+               // buildCheckboxes(layer);
+           });
+         }
 
       })
       .catch(function(error) {
