@@ -81,7 +81,7 @@ ul li .active {
 .card {
   max-height: 250px;
   border-radius: 0;
-  /* border-bottom: 1px solid rgba(0, 0, 0, .125); */
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
   border-left: none;
   border-right: none;
   border-top: none;
@@ -90,6 +90,9 @@ ul li .active {
 /* Prevents content overlapping header on scroll */
 .card-body {
   overflow: auto;
+}
+#collapse-header {
+  overflow: scroll;
 }
 
 /* -- Custom cards for 'Current Status' -- */
