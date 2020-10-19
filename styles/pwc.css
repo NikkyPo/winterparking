@@ -92,7 +92,7 @@ ul li .active {
   overflow: auto;
 }
 #collapse-header {
-  overflow: scroll;
+  overflow: auto;
 }
 
 /* -- Custom cards for 'Current Status' -- */
@@ -154,6 +154,14 @@ ul li .active {
 }
 .esri-legend__service {
   padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.esri-ui-corner {
+  width: 100%;
+}
+.esri-search {
+  width: 100%;
 }
 
 /* ------------------------------------------------------- */
@@ -222,6 +230,25 @@ ul li .active {
   .card {
     max-height: 215px;
   }
+  .esri-ui-corner {
+    max-width: 100%;
+  }
+  .esri-search {
+    width: 240px;
+  }
+}
+
+/* Medium screen heights and portrait orientation (starts at iPad and above) */
+@media (min-width: 450px) and (orientation: portrait) {
+  .card {
+    max-height: 215px;
+  }
+  .esri-ui-corner {
+    max-width: 100%;
+  }
+  .esri-search {
+    width: 240px;
+  }
 }
 
 /* Desktop View (starts at iPad Pro size) */
@@ -264,8 +291,16 @@ ul li .active {
   /* Cards */
   #status-collapse, #map-collapse, #help-collapse {
     top: 85px;
-    left: 60px;
+    right: 15px;
     width: 400px;
     bottom: auto;
+  }
+
+  /* Esri styling */
+  .esri-ui-corner {
+    max-width: 100%;
+  }
+  .esri-search {
+    width: 240px;
   }
 }
