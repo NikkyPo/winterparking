@@ -12,9 +12,10 @@ $(document).ready(function () {
     "esri/layers/FeatureLayer",
     'esri/widgets/BasemapGallery',
     'esri/core/watchUtils',
+    "esri/widgets/Zoom",
     "dojo/on",
     'dojo/domReady!',
-  ], function (WebMap, MapView, Home, Legend, BasemapToggle, Search, Locate, LayerList, FeatureLayer, BasemapGallery, watchUtils, on) {
+  ], function (WebMap, MapView, Home, Legend, BasemapToggle, Search, Locate, LayerList, FeatureLayer, BasemapGallery, watchUtils, Zoom, on) {
 
     let obj;
 
@@ -22,21 +23,57 @@ $(document).ready(function () {
     var map = new WebMap({
       portalItem: {
         id: '4c95d0ae349849ddbd50cde3e10971a8',
-      },
+      }
       // basemap: 'streets-navigation-vector'
     });
 
     ///// View
     var view = new MapView({
       container: 'viewDiv',
-      map: map
+      map: map,
+      ui: {
+        components: ['attribution']
+      }
     });
 
     ///// Load map
     map.load()
 
+  .then(function() {
+    //////// Basemap Gallery
+    var basemapGallery = new BasemapGallery({
+      container: 'map-div',
+      view: view,
+    });
+    watchUtils.once(basemapGallery.source.basemaps, 'length', function (state) {
+      setTimeout(function () {
+        basemapGallery.source.basemaps.splice(6, 20);
+        basemapGallery.source.basemaps.splice(0, 1);
+        basemapGallery.source.basemaps.splice(1, 2);
+      }, 700);
+    });
+    // load the basemap to get its layers created
+    return map.basemap.load();
+  })
+
+  .then(function() {
+    // grab all the layers and load them
+    const allLayers = map.allLayers;
+    const promises = allLayers.map(function(layer) {
+      return layer.load();
+    });
+    return Promise.all(promises.toArray());
+  })
+
+  .then(function(layers) {
+    // each layer load promise resolves with the layer
+    const webmapList = map.allLayers.find(function(layers){
+      console.log(layers);
+    });
+  })
+
     //// Load current data from Admin Console. Post error if problem arises.
-    .then(function(evt){
+    .then(function(){
       let url = 'https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json';
       fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
           method: 'get',
@@ -174,29 +211,13 @@ $(document).ready(function () {
           console.log('There has been an error. Cannot load current data.')
       });
     })
-    //// load basemaps
-    .then(function(){
-      //////// Basemap Gallery
-      var basemapGallery = new BasemapGallery({
-        container: 'map-div',
-        view: view,
-      });
 
-      watchUtils.once(basemapGallery.source.basemaps, 'length', function (state) {
-        setTimeout(function () {
-          basemapGallery.source.basemaps.splice(6, 20);
-          basemapGallery.source.basemaps.splice(0, 1);
-          basemapGallery.source.basemaps.splice(1, 2);
-        }, 700);
-      });
-    })
     // Use data from Admin Console
     .then(function() {
       view.map = map;
 
       // Options for timestamp visualization
       const options = {
-         timeZone:"Canada/Central",
          hour12 : true,
          hour:  "numeric",
          minute: "numeric"
@@ -296,30 +317,12 @@ $(document).ready(function () {
         /// Widgets added to UI containter ////
         ///////////////////////////////////////
 
-        ///// Home button
-        var home = new Home({
-          view: view,
-        });
-        view.ui.add(home, 'top-left', 0);
-
-        ////// Custom marker
-        var marker = {
-          type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
-          color: 'red',
-          size: '18px',
-          outline: {
-          // autocasts as new SimpleLineSymbol()
-          color: [128, 0, 0, 0.5],
-          width: '1.5px',
-          },
-        };
-
         ///// Search widget
         var searchWidget = new Search({
           view: view,
           popupEnabled: false,
         });
-        view.ui.add(searchWidget, 'top-right');
+        view.ui.add(searchWidget, 'top-left');
 
         // Change search marker symbol
         searchWidget.watch('activeSource', function (evt) {
@@ -338,6 +341,30 @@ $(document).ready(function () {
           console.log('lat/long result ', point);
         });
 
+        ///// Zoom widget
+        var zoom = new Zoom({
+          view: view
+        });
+        view.ui.add(zoom, 'top-left');
+
+        ///// Home button
+        var home = new Home({
+          view: view,
+        });
+        view.ui.add(home, 'top-left', 0);
+
+        ////// Custom marker
+        var marker = {
+          type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
+          color: 'red',
+          size: '18px',
+          outline: {
+          // autocasts as new SimpleLineSymbol()
+          color: [128, 0, 0, 0.5],
+          width: '1.5px',
+          },
+        };
+
         ///// Locate Button
         var locate = new Locate({
           view: view,
@@ -354,18 +381,48 @@ $(document).ready(function () {
           container: 'help-div',
           view: view,
         });
-        console.log(layerList.operationalItems);
+        // console.log(layerList.operationalItems);
 
-        //////// Legend
-        var legendWidget = new Legend({
-          container: 'normal-div',
+
+        //////// Legends
+        var nightPlowlegend = new Legend({
           view: view,
-          // layerInfos: [{
-          //   layer: FeatureLayer
-          // }]
+          layerInfos: [{
+            layer: map.layers.getItemAt(6)
+          }],
+          container: 'nightPlow-div'
         });
 
-        console.log(legendWidget);
+        var dayPlowlegend = new Legend({
+          view: view,
+          layerInfos: [{
+            layer: map.layers.getItemAt(4)
+          }],
+          container: 'dayPlow-div'
+        });
+
+        var cleanUplegend = new Legend({
+          view: view,
+          layerInfos: [{
+            layer: map.layers.getItemAt(2)
+          }],
+          container: 'cleanUp-div'
+        });
+
+        var normallegend = new Legend({
+          view: view,
+          layerInfos: [{
+            layer: map.layers.getItemAt(0)
+          }],
+          container: 'normal-div'
+        });
+
+        // Set to false so legend does not turn off as user zooms in/out
+        dayPlowlegend.respectLayerVisibility = false;
+        nightPlowlegend.respectLayerVisibility = false;
+        cleanUplegend.respectLayerVisibility = false;
+        normallegend.respectLayerVisibility = false;
+
 
         map.on('layers-add-result', function (evt){
           console.log(evt)
