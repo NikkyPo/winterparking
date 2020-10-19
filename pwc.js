@@ -23,8 +23,8 @@ $(document).ready(function () {
     var map = new WebMap({
       portalItem: {
         id: '4c95d0ae349849ddbd50cde3e10971a8',
-      }
-      // basemap: 'streets-navigation-vector'
+      },
+      basemap: 'streets-navigation-vector'
     });
 
     ///// View
@@ -36,10 +36,6 @@ $(document).ready(function () {
       }
     });
 
-    ///// Load map
-    map.load()
-
-  .then(function() {
     //////// Basemap Gallery
     var basemapGallery = new BasemapGallery({
       container: 'map-div',
@@ -50,27 +46,11 @@ $(document).ready(function () {
         basemapGallery.source.basemaps.splice(6, 20);
         basemapGallery.source.basemaps.splice(0, 1);
         basemapGallery.source.basemaps.splice(1, 2);
-      }, 700);
+      }, 1000);
     });
-    // load the basemap to get its layers created
-    return map.basemap.load();
-  })
 
-  .then(function() {
-    // grab all the layers and load them
-    const allLayers = map.allLayers;
-    const promises = allLayers.map(function(layer) {
-      return layer.load();
-    });
-    return Promise.all(promises.toArray());
-  })
-
-  .then(function(layers) {
-    // each layer load promise resolves with the layer
-    const webmapList = map.allLayers.find(function(layers){
-      console.log(layers);
-    });
-  })
+    ///// Load map
+    map.load()
 
     //// Load current data from Admin Console. Post error if problem arises.
     .then(function(){
@@ -212,236 +192,310 @@ $(document).ready(function () {
       });
     })
 
-    // Use data from Admin Console
-    .then(function() {
-      view.map = map;
-
-      // Options for timestamp visualization
-      const options = {
-         hour12 : true,
-         hour:  "numeric",
-         minute: "numeric"
-      };
-
-      let toNight, fromNight, toDay, fromDay, toClean, fromClean;
-
-      let nightPlow = obj[0].field_night_plow_phase;
-      let nightPlowFrom = new Date(nightPlow[0].value).getTime()
-      let nightPlowTo = new Date(nightPlow[0].end_value).getTime()
-
-      let dayPlow = obj[0].field_day_plow_phase;
-      let dayPlowFrom = new Date(dayPlow[0].value).getTime()
-      let dayPlowTo = new Date(dayPlow[0].end_value).getTime()
-
-      let cleanUp = obj[0].field_clean_up_phase;
-      let cleanUpFrom = new Date(cleanUp[0].value).getTime()
-      let cleanUpTo = new Date(cleanUp[0].end_value).getTime()
-
-      let emergency = obj[0].status[0].value;
-      let currentTime = Date.now()
-
-      // Update UI banner with timestamp
-      function updateBanner() {
-        toNight = new Date(nightPlowTo).toLocaleTimeString('en-US', options);
-        fromNight = new Date(nightPlowFrom).toLocaleTimeString('en-US', options);
-
-        toDay = new Date(dayPlowTo).toLocaleTimeString('en-US', options);
-        fromDay = new Date(dayPlowFrom).toLocaleTimeString('en-US', options);
-
-        toClean = new Date(cleanUpTo).toLocaleTimeString('en-US', options);
-        fromClean = new Date(cleanUpFrom).toLocaleTimeString('en-US', options);
-
-
-        if((currentTime > nightPlowFrom) && (currentTime < nightPlowTo)){
-          console.log('within nightplow')
-          $('#phase').text("Night Plow Active " + toNight + " to " + fromNight);
-          $('#nightPlow-button').addClass('active');
-          $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
-
-        } else if ((currentTime > dayPlowFrom) && (currentTime < dayPlowTo)) {
-          console.log('within dayplow')
-          $('#phase').text("Day Plow Active " + toDay + " to " + fromDay);
-          $('#dayPlow-button').addClass('active');
-          $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
-
-        } else if ((currentTime > cleanUpFrom) && (currentTime < cleanUpTo)) {
-          console.log('within cleanup');
-          $('#phase').text("Clean Up Active " + toClean + " to " + fromClean);
-          $('#cleanUp-button').addClass('active');
-          $('#layer-carousel').find('#cleanUp-active').first().addClass('active');
-
-        } else {
-          console.log('Outside of times. Put green');
-          $('ul li .active').css('color', 'green');
-          $('.status-header').css('background-color', 'green');
-          $('#emergency').text("NO SNOW EMERGENCY");
-          $('#normal-button').addClass('active');
-          $('#layer-carousel').find('#normal-active').first().addClass('active');
-        }
+  .then(function() {
+    // grab all the layers and load them
+    const allLayers = map.allLayers;
+    const promises = allLayers.map(function(layer) {
+      // Turn off all layers except basemap
+      if (layer.id !== 'streets-navigation-vector-base-layer') {
+        layer.visible = false;
       }
+      return layer.load();
+    });
+    return Promise.all(promises.toArray());
+  })
 
-      function updateCarousel() {
-        $('#nightPlow-text').text("Active " + toNight + " to " + fromNight);
-        $('#dayPlow-text').text("Active " + toDay + " to " + fromDay);
-        $('#cleanUp-text').text("Active " + toClean + " to " + fromClean);
+  // Use data from Admin Console
+  .then(function(layers) {
+    view.map = map;
+
+    //////// Legends
+    var nightPlowlegend = new Legend({
+      view: view,
+      layerInfos: [{
+        layer: layers[8]
+      }],
+      container: 'nightPlow-div'
+    });
+
+    var dayPlowlegend = new Legend({
+      view: view,
+      layerInfos: [{
+        layer: layers[6]
+      }],
+      container: 'dayPlow-div'
+    });
+
+    var cleanUplegend = new Legend({
+      view: view,
+      layerInfos: [{
+        layer: layers[4]
+      }],
+      container: 'cleanUp-div'
+    });
+
+    var normallegend = new Legend({
+      view: view,
+      layerInfos: [{
+        layer: layers[2]
+      }],
+      container: 'normal-div'
+    });
+
+    // Set to false so legend does not turn off as user zooms in/out
+    dayPlowlegend.respectLayerVisibility = false;
+    nightPlowlegend.respectLayerVisibility = false;
+    cleanUplegend.respectLayerVisibility = false;
+    normallegend.respectLayerVisibility = false;
+
+
+    // Removes all layers except for basemaps
+    function removeAllLayers(layer1, layer2) {
+      var mapLayers = layers.length
+      for (var j = mapLayers-1; j >=0; j--){
+         if ((layers[j].id !== 'streets-navigation-vector-base-layer') && (layers[j].id !== layer1) && (layers[j].id !== layer2)) {
+           layers[j].visible = false;
+         }
       }
+    }
 
+    //// Button event
+    $('.sublayers .sublayers-item').click(function (e) {
+      var id = (e.target.getAttribute('data-id'))
+    });
 
-      //// Check if emergency
-        switch (emergency) {
-          case emergency === true:
-            $('ul li .active').css('color', 'red');
-            $('.status-header').css('background-color', 'red');
-            $('#emergency').text("SNOW EMERGENCY DECLARED");
-            updateBanner()
-            updateCarousel()
+    let layer1;
+    let layer2;
+
+    // Listen for when buttons have been clicked to turn layers on and off in map service.
+    $('.sublayers-item').click(function (e) {
+        var id = e.currentTarget.getAttribute("data-id");
+        console.log(id);
+
+        switch (id) {
+          // Night Plow
+          case '1':
+          layers[8].visible = true;
+          layers[7].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Night_Plow_View_7283'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          // Day Plow
+          case '2':
+          layers[6].visible = true;
+          layers[5].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Day_Plow_View_607'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          // Clean Up
+          case '3':
+          layers[4].visible = true;
+          layers[3].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Cleanup_View_4291'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          // Normal
+          case '4':
+          layers[2].visible = true;
+          layers[1].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Normal_View_6799'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049'
+          removeAllLayers(layer1, layer2)
           break;
 
           default:
-            $('ul li .active').css('color', 'green');
-            $('.status-header').css('background-color', 'green');
-            $('#emergency').text("NO SNOW EMERGENCY");
-            $('#phase').text("Normal Parking Active");
-            $('#normal-button').addClass('active');
-            // $('#normal-text').addClass('active');
+          console.log('There has been a problem loading the layer')
+          layer1 = null;
+          layer2 = null;
+          removeAllLayers(layer1, layer2)
         }
+    });
+
+    // Options for timestamp visualization
+    const options = {
+       hour12 : true,
+       hour:  "numeric",
+       minute: "numeric"
+    };
+
+    let toNight, fromNight, toDay, fromDay, toClean, fromClean;
+
+    let nightPlow = obj[0].field_night_plow_phase;
+    let nightPlowFrom = new Date(nightPlow[0].value).getTime()
+    let nightPlowTo = new Date(nightPlow[0].end_value).getTime()
+
+    let dayPlow = obj[0].field_day_plow_phase;
+    let dayPlowFrom = new Date(dayPlow[0].value).getTime()
+    let dayPlowTo = new Date(dayPlow[0].end_value).getTime()
+
+    let cleanUp = obj[0].field_clean_up_phase;
+    let cleanUpFrom = new Date(cleanUp[0].value).getTime()
+    let cleanUpTo = new Date(cleanUp[0].end_value).getTime()
+
+    let emergency = obj[0].status[0].value;
+    let currentTime = Date.now()
+
+    // Update UI banner with timestamp
+    function updateBanner() {
+      toNight = new Date(nightPlowTo).toLocaleTimeString('en-US', options);
+      fromNight = new Date(nightPlowFrom).toLocaleTimeString('en-US', options);
+
+      toDay = new Date(dayPlowTo).toLocaleTimeString('en-US', options);
+      fromDay = new Date(dayPlowFrom).toLocaleTimeString('en-US', options);
+
+      toClean = new Date(cleanUpTo).toLocaleTimeString('en-US', options);
+      fromClean = new Date(cleanUpFrom).toLocaleTimeString('en-US', options);
 
 
-      //// Button event
-      $('.sublayers .sublayers-item').click(function (e) {
-        var id = (e.target.getAttribute('data-id'))
+      if((currentTime > nightPlowFrom) && (currentTime < nightPlowTo)){
+        console.log('within nightplow')
+        $('#phase').text("Night Plow Active " + toNight + " to " + fromNight);
+        $('#nightPlow-button').addClass('active');
+        $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
+        layers[8].visible = true;
+        layers[7].visible = true;
+
+      } else if ((currentTime > dayPlowFrom) && (currentTime < dayPlowTo)) {
+        console.log('within dayplow')
+        $('#phase').text("Day Plow Active " + toDay + " to " + fromDay);
+        $('#dayPlow-button').addClass('active');
+        $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
+        layers[6].visible = true;
+        layers[5].visible = true;
+
+      } else if ((currentTime > cleanUpFrom) && (currentTime < cleanUpTo)) {
+        console.log('within cleanup');
+        $('#phase').text("Clean Up Active " + toClean + " to " + fromClean);
+        $('#cleanUp-button').addClass('active');
+        $('#layer-carousel').find('#cleanUp-active').first().addClass('active');
+        layers[4].visible = true;
+        layers[3].visible = true;
+
+      } else {
+        console.log('Outside of times. Put green');
+        $('ul li .active').css('color', 'green');
+        $('.status-header').css('background-color', 'green');
+        $('#emergency').text("NO SNOW EMERGENCY");
+        $('#normal-button').addClass('active');
+        $('#layer-carousel').find('#normal-active').first().addClass('active');
+        layers[2].visible = true;
+        layers[1].visible = true;
+      }
+    }
+
+    function updateCarousel() {
+      $('#nightPlow-text').text("Active " + toNight + " to " + fromNight);
+      $('#dayPlow-text').text("Active " + toDay + " to " + fromDay);
+      $('#cleanUp-text').text("Active " + toClean + " to " + fromClean);
+    }
+
+    //// Check if emergency
+      switch (emergency) {
+        case emergency === true:
+          $('ul li .active').css('color', 'red');
+          $('.status-header').css('background-color', 'red');
+          $('#emergency').text("SNOW EMERGENCY DECLARED");
+          updateBanner()
+          updateCarousel()
+        break;
+
+        default:
+          $('ul li .active').css('color', 'green');
+          $('.status-header').css('background-color', 'green');
+          $('#emergency').text("NO SNOW EMERGENCY");
+          $('#phase').text("Normal Parking Active");
+          $('#normal-button').addClass('active');
+          // $('#normal-text').addClass('active');
+          layers[2].visible = true;
+          layers[1].visible = true;
+      }
+
+
+      ////////////////////////////////////////
+      /// Widgets added to UI containter ////
+      ///////////////////////////////////////
+
+      ///// Search widget
+      var searchWidget = new Search({
+        view: view,
+        popupEnabled: false,
+      });
+      view.ui.add(searchWidget, 'top-left');
+
+      // Change search marker symbol
+      searchWidget.watch('activeSource', function (evt) {
+        console.log(evt, 'here');
+        evt.resultSymbol = marker;
       });
 
-
-        ////////////////////////////////////////
-        /// Widgets added to UI containter ////
-        ///////////////////////////////////////
-
-        ///// Search widget
-        var searchWidget = new Search({
-          view: view,
-          popupEnabled: false,
-        });
-        view.ui.add(searchWidget, 'top-left');
-
-        // Change search marker symbol
-        searchWidget.watch('activeSource', function (evt) {
-          console.log(evt, 'here');
-          evt.resultSymbol = marker;
-        });
-
-        // Returns search result
-        searchWidget.on('select-result', function (evt) {
-          console.log('search event info: ', JSON.stringify(evt.result.feature));
-          var point = {
-            type: 'point',
-            latitude: evt.result.feature.geometry.latitude,
-            longitude: evt.result.feature.geometry.longitude,
-          };
-          console.log('lat/long result ', point);
-        });
-
-        ///// Zoom widget
-        var zoom = new Zoom({
-          view: view
-        });
-        view.ui.add(zoom, 'top-left');
-
-        ///// Home button
-        var home = new Home({
-          view: view,
-        });
-        view.ui.add(home, 'top-left', 0);
-
-        ////// Custom marker
-        var marker = {
-          type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
-          color: 'red',
-          size: '18px',
-          outline: {
-          // autocasts as new SimpleLineSymbol()
-          color: [128, 0, 0, 0.5],
-          width: '1.5px',
-          },
+      // Returns search result
+      searchWidget.on('select-result', function (evt) {
+        console.log('search event info: ', JSON.stringify(evt.result.feature));
+        var point = {
+          type: 'point',
+          latitude: evt.result.feature.geometry.latitude,
+          longitude: evt.result.feature.geometry.longitude,
         };
+        console.log('lat/long result ', point);
+      });
 
-        ///// Locate Button
-        var locate = new Locate({
-          view: view,
-          useHeadingEnabled: false,
-          goToOverride: function (view, options) {
-            options.target.scale = 1500; // Override the default map scale
-            return view.goTo(options.target);
-          },
-        });
-        view.ui.add(locate, 'top-left');
+      ///// Zoom widget
+      // var zoom = new Zoom({
+      //   view: view
+      // });
+      // view.ui.add(zoom, 'top-left');
 
-        //////// Layer List (phases)
-        var layerList = new LayerList({
-          container: 'help-div',
-          view: view,
-        });
-        // console.log(layerList.operationalItems);
+      ///// Home button
+      var home = new Home({
+        view: view,
+      });
+      view.ui.add(home, 'top-left', 0);
 
+      ////// Custom marker
+      var marker = {
+        type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
+        color: 'red',
+        size: '18px',
+        outline: {
+        // autocasts as new SimpleLineSymbol()
+        color: [128, 0, 0, 0.5],
+        width: '1.5px',
+        },
+      };
 
-        //////// Legends
-        var nightPlowlegend = new Legend({
-          view: view,
-          layerInfos: [{
-            layer: map.layers.getItemAt(6)
-          }],
-          container: 'nightPlow-div'
-        });
+      ///// Locate Button
+      var locate = new Locate({
+        view: view,
+        useHeadingEnabled: false,
+        goToOverride: function (view, options) {
+          options.target.scale = 1500; // Override the default map scale
+          return view.goTo(options.target);
+        },
+      });
+      view.ui.add(locate, 'top-left');
 
-        var dayPlowlegend = new Legend({
-          view: view,
-          layerInfos: [{
-            layer: map.layers.getItemAt(4)
-          }],
-          container: 'dayPlow-div'
-        });
+      //////// Layer List (phases)
+      var layerList = new LayerList({
+        container: 'help-div',
+        view: view,
+      });
+      // console.log(layerList.operationalItems);
 
-        var cleanUplegend = new Legend({
-          view: view,
-          layerInfos: [{
-            layer: map.layers.getItemAt(2)
-          }],
-          container: 'cleanUp-div'
-        });
-
-        var normallegend = new Legend({
-          view: view,
-          layerInfos: [{
-            layer: map.layers.getItemAt(0)
-          }],
-          container: 'normal-div'
-        });
-
-        // Set to false so legend does not turn off as user zooms in/out
-        dayPlowlegend.respectLayerVisibility = false;
-        nightPlowlegend.respectLayerVisibility = false;
-        cleanUplegend.respectLayerVisibility = false;
-        normallegend.respectLayerVisibility = false;
-
-
-        map.on('layers-add-result', function (evt){
-          console.log(evt)
-          buildLayerList(evt)
-        });
-
-        function buildLayerList(evt) {
-           array.forEach(evt.layers, function (layer) {
-               var vis = [];
-               console.log(layer)
-               // buildCheckboxes(layer);
-           });
-         }
-
-      })
-      .catch(function(error) {
-        console.error("The resource failed to load: ", error);
-      })
-  });
+    })
+    .catch(function(error) {
+      console.error("The resource failed to load: ", error);
+    })
+});
 
 
 //////////////////////////////////////////////////////////////////
@@ -498,7 +552,10 @@ $(document).ready(function () {
   $('.card-header').click(function () {
     $('.map-button, .help-button').removeClass('none');
   });
+
 });
+
+
 
 // document.addEventListener(
 //   'click',
