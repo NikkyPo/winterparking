@@ -163,6 +163,9 @@ ul li .active {
 .esri-search {
   width: 100%;
 }
+.esri-legend__layer-caption {
+  display: none !important;
+}
 
 /* ------------------------------------------------------- */
 /* Carousel  */
@@ -234,7 +237,7 @@ ul li .active {
     max-width: 100%;
   }
   .esri-search {
-    width: 240px;
+    width: 250px;
   }
 }
 
@@ -247,7 +250,7 @@ ul li .active {
     max-width: 100%;
   }
   .esri-search {
-    width: 240px;
+    width: 250px;
   }
 }
 
