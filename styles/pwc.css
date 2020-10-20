@@ -1,0 +1,309 @@
+html, body, #viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Avenir Next W00", "Avenir Next", Avenir;
+}
+
+/* ------------------------------------------------------- */
+/* ---- Bottom Tab bar customization Styles ---- */
+/* Nav bar styling for small to medium screens */
+.slidemenu {
+  position: absolute;
+  display: flex;
+  bottom: 0;
+  width: 100%;
+  height: 56px;
+  z-index: 1;
+  color: white;
+  background: white;
+  overflow: hidden;
+}
+
+/* Tab menu container */
+.tab-menu {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+/* Tab menu list item */
+.tab-menu li {
+  width: 33%;
+  text-align: center;
+  display: block;
+  float: left;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* Display block so tab bar fills 100% width of li */
+.tab-menu li a {
+  display: block;
+  padding: 1px;
+  color: #666;
+  font-size: 12px;
+  text-decoration: none;
+  outline: none;
+}
+
+/* Button color styles */
+ul li .none {
+  color: black;
+  font-weight: bold;
+  outline: none;
+}
+ul li .active {
+  font-weight: bold;
+  outline: none;
+}
+
+/* Icon style */
+.slidemenu li .icon {
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  line-height: 20px;
+  border-radius: 50%;
+}
+
+/* ------------------------------------------------------- */
+/* ---- Card customization ---- */
+
+/* Reverses card collapse direction */
+#status-collapse, #map-collapse, #help-collapse {
+  position: absolute;
+  bottom: 56px;
+  width: 100%;
+}
+
+.card {
+  max-height: 250px;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+/* Prevents content overlapping header on scroll */
+.card-body {
+  overflow: auto;
+}
+#collapse-header {
+  overflow: auto;
+}
+
+/* -- Custom cards for 'Current Status' -- */
+.status-header {
+  height: 70px;
+}
+.status-collapse-heading, .status-collapse-heading:hover, .status-collapse-heading:focus, .status-collapse-heading:active, .status-collapse-heading:visited {
+  color: white;
+  text-decoration: none;
+}
+
+/* Carrot transition */
+.card-header .fa {
+  transition: .3s transform ease-in-out;
+}
+.card-header .collapsed .fa {
+  transform: rotate(180deg);
+}
+
+#emergency {
+  font-weight: bold;
+}
+#phase {
+  font-size: 14px;
+}
+
+/* -- Custom cards for 'Map' -- */
+.change-color, .change-color:hover, .change-color:focus, .change-color:active, .change-color:visited {
+  color: #333;
+  text-decoration: none;
+}
+
+/* -- Custom cards for 'Current Status' -- */
+.status-collapse-heading, .status-collapse-heading:hover, .status-collapse-heading:focus, .status-collapse-heading:active, .status-collapse-heading:visited {
+  color: white;
+  text-decoration: none;
+}
+
+.accordion>.card>.card-header {
+    margin-bottom: 0;
+}
+
+
+/* Tabs */
+.btn-group {
+  font-size: 15px;
+}
+
+.material-icons {
+  margin: 1px;
+}
+
+
+/* ------------------------------------------------------- */
+/* Esri styling */
+.esri-attribution {
+  font-size: 7px;
+  background-color: rgba(255, 255, 255, 0);
+}
+.esri-legend__service {
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.esri-ui-corner {
+  width: 100%;
+}
+.esri-search {
+  width: 100%;
+}
+.esri-legend__layer-caption {
+  display: none !important;
+}
+
+/* ------------------------------------------------------- */
+/* Carousel  */
+.carousel-indicators {
+  position: static;
+  margin: 2%;
+}
+
+.carousel-item {
+  font-size: 14px;
+}
+
+.carousel-indicators .item.active {
+  background: transparent;
+}
+
+.btn-group-sm>.btn, .btn-sm {
+  font-size: .8em;
+}
+
+.btn-outline-dark {
+  border-color: #ddd;
+}
+
+/* ------------------------------------------------------- */
+/* ---- Media Queries ---- */
+/* Very small screen heights and widths (starts at iPhone 5 and below) */
+@media (max-width: 320px) {
+
+  /* Tab bar */
+  .slidemenu {
+    height: 50px;
+  }
+
+  .slidemenu li .icon {
+    line-height: 17px;
+  }
+
+  .tab-menu li {
+    padding-top: 6px;
+    padding-bottom: 7px;
+  }
+
+  /* Cards */
+
+  #status-collapse, #map-collapse, #help-collapse {
+    bottom: 50px;
+  }
+
+  #phase {
+    font-size: 12px;
+  }
+  #emergency {
+    font-size: 13px;
+  }
+
+  /* Tabs */
+  .btn-group {
+    font-size: 14px;
+  }
+}
+
+/* Very small screen heights and landscape orientation (starts at iPhone 5 and below) */
+@media (min-width: 320px) and (orientation: landscape) {
+  .card {
+    max-height: 215px;
+  }
+  .esri-ui-corner {
+    max-width: 100%;
+  }
+  .esri-search {
+    width: 250px;
+  }
+}
+
+/* Medium screen heights and portrait orientation (starts at iPad and above) */
+@media (min-width: 450px) and (orientation: portrait) {
+  .card {
+    max-height: 215px;
+  }
+  .esri-ui-corner {
+    max-width: 100%;
+  }
+  .esri-search {
+    width: 250px;
+  }
+}
+
+/* Desktop View (starts at iPad Pro size) */
+@media (min-width: 769px) and (min-height: 500px) {
+
+  /* Map div */
+  #viewDiv {
+    padding-top: 70px;
+    padding-bottom: 0;
+  }
+
+  /* Tab bar */
+  .slidemenu {
+    top: 0;
+    height: 70px;
+  }
+
+  .container-fluid {
+    max-width: 700px;
+    ;
+  }
+
+  .card {
+    max-height: 450px;
+  }
+
+  .slidemenu li .icon {
+    line-height: 30px;
+  }
+
+  .tab-menu li {
+    padding-top: 10px;
+    padding-bottom: 7px;
+  }
+
+  .tab-menu li a {
+    font-size: 14px;
+  }
+
+  /* Cards */
+  #status-collapse, #map-collapse, #help-collapse {
+    top: 85px;
+    right: 15px;
+    width: 400px;
+    bottom: auto;
+  }
+
+  /* Esri styling */
+  .esri-ui-corner {
+    max-width: 100%;
+  }
+  .esri-search {
+    width: 240px;
+  }
+}

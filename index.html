@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
+    <link rel="icon" href="https://www.esri.com/favicon.ico" />
+    <title>Snow Emergency Parking Map</title>
+
+    <!-- Bootstrap Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+    <!-- Esri API for Javascript -->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/css/main.css" />
+    <link rel="stylesheet" href="styles/pwc.css" />
+
+    <script src="https://js.arcgis.com/4.16/"></script>
+
+    <script type="text/javascript" src="pwc.js"></script>
+  </head>
+
+  <body>
+    <div class="message"></div>
+    <div id="viewDiv" class=""></div>
+
+    <nav class="slidemenu">
+      <div class="container-fluid">
+        <ul class="tab-menu">
+          <li>
+            <!-- Status Button -->
+            <a class="status-button active">
+              <i class="icon fa fa-exclamation-triangle fa-lg"></i>
+              <span>Status</span>
+            </a>
+          </li>
+          <li>
+            <!-- Map Button -->
+            <a class="map-button none" href="#map-collapse" data-toggle="collapse" tabindex="0" data-target="#map-collapse" aria-haspopup="true">
+              <i class="icon fa fa-map" aria-hidden="true"></i>
+              <span>Map Type</span>
+            </a>
+          </li>
+          <li>
+            <!-- Help Button -->
+            <a class="help-button none" href="#help-collapse" data-toggle="collapse" tabindex="0" data-target="#help-collapse" aria-haspopup="true">
+              <i class="icon fa fa-question-circle fa-lg" aria-hidden="true"></i>
+              <span>Help</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="accordion" id="status-collapse">
+      <div class="card">
+        <div class="card-header status-header" data-toggle="collapse" href="#collapse-header" aria-expanded="true" aria-controls="collapse-header">
+          <div class="row">
+            <div class="left col-1 px-2 d-flex justify-content-center">
+              <a data-toggle="collapse" href="#collapse-header" aria-expanded="true" aria-controls="collapse-header" class="status-collapse-heading">
+                <i class="fa fa-chevron-down pull-right"></i>
+              </a>
+            </div>
+            <div class="col d-flex px-1 justify-content-center">
+              <a class="status-collapse-heading">
+                <span id="emergency">Loading Current Status</span>
+              </a>
+            </div>
+            <div class="right col-1 px-2 d-flex justify-content-center">
+              <!-- <a data-toggle="collapse" href="#collapse-header" aria-expanded="true" aria-controls="collapse-header" class="status-collapse-heading">
+              <i class="fa fa-times"></i>
+            </a> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+              <a class="status-collapse-heading">
+                <span id="phase"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div id="collapse-header" class="collapse show" aria-labelledby="status-collapse-heading" data-parent="#status-collapse">
+          <div class="card-body pb-0 px-2 pt-2">
+            <div id="layer-carousel" class="carousel slide" data-wrap="false" data-interval="false">
+              <div class="carousel-indicators btn-group btn-group-sm btn-group-toggle pb-2 m-0 sublayers" role="group" aria-label="Layer Buttons">
+                <label data-id="1" id="nightPlow-button" data-target="#layer-carousel" data-slide-to="0" class="btn btn-outline-dark px-1 sublayers-item">
+                  <input type="radio" name="options" />
+                  <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="material-icons bi bi-moon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M14.53 10.53a7 7 0 0 1-9.058-9.058A7.003 7.003 0 0 0 8 15a7.002 7.002 0 0 0 6.53-4.47z" />
+                  </svg>
+                  <span class="d-inline-block">Night Plow</span>
+                </label>
+
+                <label data-id="2" id="dayPlow-button" data-target="#layer-carousel" data-slide-to="1" class="btn btn-outline-dark px-1 sublayers-item">
+                  <input type="radio" name="options" />
+                  <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="material-icons bi bi-brightness-high-fill" fill="#ffcc00" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"
+                    />
+                  </svg>
+                  <span class="d-inline-block">Day Plow</span>
+                </label>
+
+                <label data-id="3" id="cleanUp-button" data-target="#layer-carousel" data-slide-to="2" class="btn btn-outline-dark px-1 sublayers-item">
+                  <input type="radio" name="options" />
+                  <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="material-icons bi bi-cone-striped" fill="orange" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M9.97 4.88l.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z"
+                    />
+                  </svg>
+                  <span class="d-inline-block">Clean Up</span>
+                </label>
+
+                <label data-id="4" id="normal-button" data-target="#layer-carousel" data-slide-to="3" class="btn btn-outline-dark px-1 sublayers-item">
+                  <input type="radio" name="options" />
+                  <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="material-icons bi bi-check-circle-fill" fill="green" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                  </svg>
+                  <span class="d-inline-block">Normal Parking</span>
+                </label>
+              </div>
+
+              <div class="carousel-inner">
+                <div id="nightPlow-active" class="carousel-item">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <span id="nightPlow-text">Loading time information</span>
+                        <div id="nightPlow-div"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="dayPlow-active" class="carousel-item">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <span id="dayPlow-text">Loading time information</span>
+                        <div id="dayPlow-div"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="cleanUp-active" class="carousel-item">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-auto">
+                        <span id="cleanUp-text">Loading time information</span>
+                        <div id="cleanUp-div"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="normal-active" class="carousel-item">
+                  <span id="normal-text"></span>
+                  <div id="normal-div"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Card -->
+    <div class="collapse" id="map-collapse">
+      <div class="card">
+        <div class="card-header" data-parent="#map-collapse" data-target="#map-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="#map-collapse">
+          <div class="row">
+            <div class="left col-11 px-2 d-flex">
+              <a class="change-color map-title"> <i class="icon fa fa-map" aria-hidden="true"></i><span> Map Type</span> </a>
+            </div>
+            <div class="right col-1 px-2 d-flex justify-content-center">
+              <a><span class="change-color esri-icon esri-icon-close" aria-hidden="true"></span></a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="map-div"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Card -->
+    <div class="collapse" id="help-collapse">
+      <div class="card">
+        <div class="card-header" data-parent="#help-collapse" data-target="#help-collapse" data-toggle="collapse" aria-expanded="false" aria-controls="#help-collapse" aria-hidden="true">
+          <div class="row">
+            <div class="col-11 px-2 d-flex">
+              <a class="change-color help-title"> <span class="esri-icon-question"></span><span> Help</span> </a>
+            </div>
+            <div class="col-1 px-2 d-flex justify-content-center">
+              <a><span class="change-color esri-icon esri-icon-close" aria-hidden="true"></span></a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body phase">
+          <h6 class="card-title">FAQs</h6>
+          <p><strong>My car has been towed, who do I call?</strong></p>
+          <p>You can call...</p>
+          <p><strong>I have more questions about..</strong></p>
+          <p>The answer is here...</p>
+          <div id="help-div"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
