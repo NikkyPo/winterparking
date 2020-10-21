@@ -121,7 +121,7 @@ ul li .active {
 }
 
 /* -- Custom cards for 'Map' -- */
-.change-color, .change-color:active, .change-color:visited {
+.change-color, .change-color:hover, .change-color:focus, .change-color:active, .change-color:visited {
   color: #333;
   text-decoration: none;
 }
@@ -158,12 +158,12 @@ ul li .active {
   padding-left: 0;
   padding-right: 0;
 }
-.esri-ui-corner {
+/* .esri-ui-corner {
   width: 100%;
 }
 .esri-search {
   width: 100%;
-}
+} */
 .esri-legend__layer-caption {
   display: none !important;
 }
@@ -194,12 +194,6 @@ ul li .active {
 /* ------------------------------------------------------- */
 /* ---- Media Queries ---- */
 
-@media (hover: hover) {
-  button:hover {
-    color: white;
-    text-decoration: none; /* solves sticky problem */
-  }
-}
 /* Very small screen heights and widths (starts at iPhone 5 and below) */
 @media (max-width: 320px) {
 
@@ -241,12 +235,12 @@ ul li .active {
   .card {
     max-height: 215px;
   }
-  .esri-ui-corner {
+  /* .esri-ui-corner {
     max-width: 100%;
-  }
-  .esri-search {
+  } */
+  /* .esri-search {
     width: 250px;
-  }
+  } */
 }
 
 /* Medium screen heights and portrait orientation (starts at iPad and above) */
@@ -254,12 +248,12 @@ ul li .active {
   .card {
     max-height: 215px;
   }
-  .esri-ui-corner {
+  /* .esri-ui-corner {
     max-width: 100%;
   }
   .esri-search {
     width: 250px;
-  }
+  } */
 }
 
 /* Desktop View (starts at iPad Pro size) */
@@ -308,10 +302,10 @@ ul li .active {
   }
 
   /* Esri styling */
-  .esri-ui-corner {
+  /* .esri-ui-corner {
     max-width: 100%;
   }
   .esri-search {
     width: 240px;
-  }
+  } */
 }
