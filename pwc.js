@@ -1,6 +1,5 @@
 $(document).ready(function () {
   $('.hover').on('touchstart touchend', function(e) {
-    e.preventDefault();
     $(this).toggleClass('hover_effect');
 });
   var isTouch =  !!("ontouchstart" in window) || window.navigator.msMaxTouchPoints > 0;
