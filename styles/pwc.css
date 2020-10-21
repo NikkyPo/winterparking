@@ -1,557 +1,311 @@
-$(document).ready(function () {
+html, body, #viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Avenir Next W00", "Avenir Next", Avenir;
+}
 
-  // Load Modules
-  require([
-    'esri/WebMap',
-    'esri/views/MapView',
-    'esri/widgets/Home',
-    'esri/widgets/Legend',
-    'esri/widgets/Search',
-    'esri/widgets/Locate',
-    'esri/widgets/BasemapGallery',
-    'esri/Basemap',
-    'esri/widgets/BasemapGallery/support/LocalBasemapsSource',
-    'esri/core/watchUtils',
-    'esri/widgets/Zoom',
-    'dojo/domReady!',
+/* ------------------------------------------------------- */
+/* ---- Bottom Tab bar customization Styles ---- */
+/* Nav bar styling for small to medium screens */
+.slidemenu {
+  position: absolute;
+  display: flex;
+  bottom: 0;
+  width: 100%;
+  height: 56px;
+  z-index: 1;
+  color: white;
+  background: white;
+  overflow: hidden;
+}
 
-  ], function (WebMap, MapView, Home, Legend, Search, Locate, BasemapGallery, Basemap, LocalBasemapsSource, watchUtils, Zoom) {
+/* Tab menu container */
+.tab-menu {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
 
-    // Global Variables
-    let obj;
+/* Tab menu list item */
+.tab-menu li {
+  width: 33%;
+  text-align: center;
+  display: block;
+  float: left;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
 
-    ///// Web Map
-    var map = new WebMap({
-      portalItem: {
-        id: '4c95d0ae349849ddbd50cde3e10971a8'
-      }
-    });
+/* Display block so tab bar fills 100% width of li */
+.tab-menu li a {
+  display: block;
+  padding: 1px;
+  color: #666;
+  font-size: 12px;
+  text-decoration: none;
+  outline: none;
+}
 
-    ///// View
-    var view = new MapView({
-      container: 'viewDiv',
-      map: map,
-      ui: {
-        components: ['attribution']
-      }
-    });
+/* Button color styles */
+ul li .none {
+  color: black;
+  font-weight: bold;
+  outline: none;
+}
+ul li .active {
+  font-weight: bold;
+  outline: none;
+}
 
-    // for debugging/development
-    window.view = view;
+/* Icon style */
+.slidemenu li .icon {
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  line-height: 20px;
+  border-radius: 50%;
+}
 
-    ///// Load map
-    map.load()
-    .then(function(){
-    //// Load current data from Admin Console. Post error if problem arises.
-      let url = fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
-          method: 'get',
-          mode: 'no-cors'
-      });
-      url.then(function(response) {
-        console.log(response)
-        obj = [
-              {
-                nid: [
-                  {
-                    value: 131481,
-                  },
-                ],
-                uuid: [
-                  {
-                    value: 'b5d37d65-2e66-486c-b634-2f668b6d72bb',
-                  },
-                ],
-                vid: [
-                  {
-                    value: 622741,
-                  },
-                ],
-                langcode: [
-                  {
-                    value: 'en',
-                  },
-                ],
-                type: [
-                  {
-                    target_id: 'public_works_communications',
-                    target_type: 'node_type',
-                    target_uuid: '8ee37bef-aab6-4c0a-98ef-a45c3e39099a',
-                  },
-                ],
-                revision_timestamp: [
-                  {
-                    value: '2020-09-25T21:43:21+00:00',
-                    format: 'Y-m-d\\TH:i:sP',
-                  },
-                ],
-                revision_uid: [
-                  {
-                    target_id: 27201,
-                    target_type: 'user',
-                    target_uuid: 'f96bfbab-5344-4434-a66d-a12bc38ac38b',
-                    url: '/user/27201',
-                  },
-                ],
-                revision_log: [],
-                status: [
-                  {
-                    value: true,
-                  },
-                ],
-                uid: [
-                  {
-                    target_id: 27201,
-                    target_type: 'user',
-                    target_uuid: 'f96bfbab-5344-4434-a66d-a12bc38ac38b',
-                    url: '/user/27201',
-                  },
-                ],
-                title: [
-                  {
-                    value: 'Winter Emergency',
-                  },
-                ],
-                created: [
-                  {
-                    value: '2020-09-25T21:42:19+00:00',
-                    format: 'Y-m-d\\TH:i:sP',
-                  },
-                ],
-                changed: [
-                  {
-                    value: '2020-09-25T21:43:21+00:00',
-                    format: 'Y-m-d\\TH:i:sP',
-                  }
-                ],
-                promote: [
-                  {
-                    value: true,
-                  }
-                ],
-                sticky: [
-                  {
-                    value: false,
-                  }
-                ],
-                default_langcode: [
-                  {
-                    value: true,
-                  }
-                ],
-                revision_translation_affected: [
-                  {
-                    value: true,
-                  },
-                ],
-                metatag: {
-                  value: {
-                    title: 'Winter Emergency | Saint Paul, Minnesota',
-                    canonical_url:
-                      'https://saintpaulltsdev.prod.acquia-sites.com/node/131481',
-                  }
-                },
-                path: [
-                  {
-                    alias: null,
-                    pid: null,
-                    langcode: 'en',
-                  }
-                ],
-                field_clean_up_phase: [
-                  {
-                    value: '2020-10-14T15:16:20-05:00',
-                    end_value: '2020-10-20T15:42:20-05:00',
-                  }
-                ],
-                field_day_plow_phase: [
-                  {
-                    value: '2020-11-15T08:00:20-05:00',
-                    end_value: '2020-11-25T17:00:20-05:00',
-                  }
-                ],
-                field_night_plow_phase: [
-                  {
-                    value: '2020-10-19T21:00:20-05:00',
-                    end_value: '2020-10-25T07:00:20-05:00',
-                  },
-                ],
-              },
-            ];
-        return(obj)
-      }).catch(function(err) {
-          window.alert('There has been an error loading the data. Please try again.', err)
-      });
-    })
+/* ------------------------------------------------------- */
+/* ---- Card customization ---- */
 
-    .then(function () {
-        // success map.load
-        //////// Basemap Gallery
-        var basemapGallery = new BasemapGallery({
-          source: new LocalBasemapsSource({
-            basemaps: [
-              Basemap.fromId('hybrid'), // create a basemap from a well known id
-              Basemap.fromId('streets-navigation-vector'),
-              Basemap.fromId('streets-night-vector')
-            ]
-          }),
-          container: 'map-div',
-          view: view,
-          activeBasemap: 'streets-navigation-vector'
-        });
-      }
-    )
+/* Reverses card collapse direction */
+#status-collapse, #map-collapse, #help-collapse {
+  position: absolute;
+  bottom: 56px;
+  width: 100%;
+}
 
-  .then(function() {
-    // grab all the layers and load them
-    const allLayers = map.allLayers;
-    const promises = allLayers.map(function(layer) {
-      // Turn off all layers except basemap
-        layer.visible = false;
-      return layer.load();
-    });
-    return Promise.all(promises.toArray());
-  })
+.card {
+  max-height: 250px;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
 
-  // Use data from Admin Console
-  .then(function(layers) {
-    view.map = map;
+/* Prevents content overlapping header on scroll */
+.card-body {
+  overflow: auto;
+  padding-top: 2px;
+}
+#collapse-header {
+  overflow: auto;
+}
 
-    // Options for timestamp visualization
-    const options = {
-       hour12 : true,
-       hour:  'numeric',
-       minute: 'numeric'
-    };
+/* -- Custom cards for 'Current Status' -- */
+.status-header {
+  height: 70px;
+}
+.status-collapse-heading, .status-collapse-heading:hover, .status-collapse-heading:focus, .status-collapse-heading:active, .status-collapse-heading:visited {
+  color: white;
+  text-decoration: none;
+}
 
-    let toNight, fromNight, toDay, fromDay, toClean, fromClean;
+/* Carrot transition */
+.card-header .fa {
+  transition: .3s transform ease-in-out;
+}
+.card-header .collapsed .fa {
+  transform: rotate(180deg);
+}
 
-    let nightPlow = obj[0].field_night_plow_phase;
-    let nightPlowFrom = new Date(nightPlow[0].value).getTime()
-    let nightPlowTo = new Date(nightPlow[0].end_value).getTime()
+#emergency {
+  font-weight: bold;
+}
+#phase {
+  font-size: 14px;
+}
 
-    let dayPlow = obj[0].field_day_plow_phase;
-    let dayPlowFrom = new Date(dayPlow[0].value).getTime()
-    let dayPlowTo = new Date(dayPlow[0].end_value).getTime()
+/* -- Custom cards for 'Map' -- */
+.change-color, .change-color:hover, .change-color:focus, .change-color:active, .change-color:visited {
+  color: #333;
+  text-decoration: none;
+}
 
-    let cleanUp = obj[0].field_clean_up_phase;
-    let cleanUpFrom = new Date(cleanUp[0].value).getTime()
-    let cleanUpTo = new Date(cleanUp[0].end_value).getTime()
+/* -- Custom cards for 'Current Status' -- */
+.status-collapse-heading, .status-collapse-heading:hover, .status-collapse-heading:focus, .status-collapse-heading:active, .status-collapse-heading:visited {
+  color: white;
+  text-decoration: none;
+}
 
-    let emergency = obj[0].status[0].value;
-    let currentTime = Date.now()
-
-    // Update UI banner with timestamp
-    function updateBanner() {
-      toNight = new Date(nightPlowTo).toLocaleTimeString('en-US', options);
-      fromNight = new Date(nightPlowFrom).toLocaleTimeString('en-US', options);
-
-      toDay = new Date(dayPlowTo).toLocaleTimeString('en-US', options);
-      fromDay = new Date(dayPlowFrom).toLocaleTimeString('en-US', options);
-
-      toClean = new Date(cleanUpTo).toLocaleTimeString('en-US', options);
-      fromClean = new Date(cleanUpFrom).toLocaleTimeString('en-US', options);
+.accordion>.card>.card-header {
+    margin-bottom: 0;
+}
 
 
-      if((currentTime > nightPlowFrom) && (currentTime < nightPlowTo)){
-        console.log('within nightplow')
-        $('#phase').text('Night Plow Active ' + toNight + ' to ' + fromNight);
-        $('#nightPlow-button').addClass('active');
-        $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
-        layers[7].visible = true;
-        layers[6].visible = true;
+/* Tabs */
+.btn-group {
+  font-size: 15px;
+}
 
-      } else if ((currentTime > dayPlowFrom) && (currentTime < dayPlowTo)) {
-        console.log('within dayplow')
-        $('#phase').text('Day Plow Active ' + toDay + ' to ' + fromDay);
-        $('#dayPlow-button').addClass('active');
-        $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
-        layers[5].visible = true;
-        layers[4].visible = true;
-
-      } else if ((currentTime > cleanUpFrom) && (currentTime < cleanUpTo)) {
-        console.log('within cleanup');
-        $('#phase').text('Clean Up Active ' + toClean + ' to ' + fromClean);
-        $('#cleanUp-button').addClass('active');
-        $('#layer-carousel').find('#cleanUp-active').first().addClass('active');
-        layers[3].visible = true;
-        layers[2].visible = true;
-
-      } else {
-        console.log('Outside of times. Put green');
-        $('ul li .active').css('color', 'green');
-        $('.status-header').css('background-color', 'green');
-        $('#emergency').text('NO SNOW EMERGENCY');
-        $('#normal-button').addClass('active');
-        $('#layer-carousel').find('#normal-active').first().addClass('active');
-        layers[1].visible = true;
-        layers[0].visible = true;
-      }
-    }
-
-    //// Check if emergency
-      switch (emergency) {
-        case emergency === true:
-          $('ul li .active').css('color', 'red');
-          $('.status-header').css('background-color', 'red');
-          $('#emergency').text('SNOW EMERGENCY DECLARED');
-          updateBanner()
-          // updateCarousel()
-        break;
-
-        default:
-          $('ul li .active').css('color', 'green');
-          $('.status-header').css('background-color', 'green');
-          $('#emergency').text('NO SNOW EMERGENCY');
-          $('#phase').text('Normal Parking Active');
-          $('#normal-button').addClass('active');
-          // $('#normal-text').addClass('active');
-          layers[2].visible = true;
-          layers[1].visible = true;
-      }
+.material-icons {
+  margin: 1px;
+}
 
 
-      //////// Legend
-      // Defines each layer legend and container based on the 'layers' object
-      var nightPlowlegend = new Legend({
-        view: view,
-        layerInfos: [{
-          layer: layers[7],
-          title: 'Night Plow Routes (' + toNight + ' - ' + fromNight + ')'
-        }],
-        container: 'nightPlow-div'
-      });
+/* ------------------------------------------------------- */
+/* Esri styling */
+.esri-attribution {
+  font-size: 7px;
+  background-color: rgba(255, 255, 255, 0);
+}
+.esri-legend__service {
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+/* .esri-ui-corner {
+  width: 100%;
+}
+.esri-search {
+  width: 100%;
+} */
+.esri-legend__layer-caption {
+  display: none !important;
+}
 
-      var dayPlowlegend = new Legend({
-        view: view,
-        layerInfos: [{
-          layer: layers[5],
-          title: 'Day Plow Routes (' + toDay + ' - ' + fromDay + ')'
-        }],
-        container: 'dayPlow-div'
-      });
+/* ------------------------------------------------------- */
+/* Carousel  */
+.carousel-indicators {
+  position: static;
+  margin: 2%;
+}
 
-      var cleanUplegend = new Legend({
-        view: view,
-        layerInfos: [{
-          layer: layers[3],
-          title: 'Cleanup Phase (' + toClean + ' - ' + fromClean + ')'
-        }],
-        container: 'cleanUp-div'
-      });
+.carousel-item {
+  font-size: 14px;
+}
 
-      var normallegend = new Legend({
-        view: view,
-        layerInfos: [{
-          layer: layers[1]
-        }],
-        container: 'normal-div'
-      });
+.carousel-indicators .item.active {
+  background: transparent;
+}
 
-      // Set to false so legend does not turn off as user zooms in/out
-      dayPlowlegend.respectLayerVisibility = false;
-      nightPlowlegend.respectLayerVisibility = false;
-      cleanUplegend.respectLayerVisibility = false;
-      normallegend.respectLayerVisibility = false;
+.btn-group-sm>.btn, .btn-sm {
+  font-size: .8em;
+}
 
+.btn-outline-dark {
+  border-color: #ddd;
+}
 
-      // Removes all layers except for basemaps
-      function removeAllLayers(layer1, layer2) {
-        var mapLayers = layers.length
-        for (var j = mapLayers-1; j >=0; j--){
-           if ((layers[j].id !== layer1) && (layers[j].id !== layer2)) {
-             layers[j].visible = false;
-           }
-        }
-      }
+/* ------------------------------------------------------- */
+/* ---- Media Queries ---- */
 
-      function statusEvent(id){
-        switch (id) {
-          // Night Plow
-          case '1':
-          layers[7].visible = true;
-          layers[6].visible = true;
+/* Very small screen heights and widths (starts at iPhone 5 and below) */
+@media (max-width: 320px) {
 
-          layer1 = 'Winter_Street_Parking_Night_Plow_View_7283'
-          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187'
-          removeAllLayers(layer1, layer2)
-          break;
+  /* Tab bar */
+  .slidemenu {
+    height: 50px;
+  }
 
-          // Day Plow
-          case '2':
-          layers[5].visible = true;
-          layers[4].visible = true;
+  .slidemenu li .icon {
+    line-height: 17px;
+  }
 
-          layer1 = 'Winter_Street_Parking_Day_Plow_View_607'
-          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109'
-          removeAllLayers(layer1, layer2)
-          break;
+  .tab-menu li {
+    padding-top: 6px;
+    padding-bottom: 7px;
+  }
 
-          // Clean Up
-          case '3':
-          layers[3].visible = true;
-          layers[2].visible = true;
+  /* Cards */
 
-          layer1 = 'Winter_Street_Parking_Cleanup_View_4291'
-          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028'
-          removeAllLayers(layer1, layer2)
-          break;
+  #status-collapse, #map-collapse, #help-collapse {
+    bottom: 50px;
+  }
 
-          // Normal
-          case '4':
-          layers[1].visible = true;
-          layers[0].visible = true;
+  #phase {
+    font-size: 12px;
+  }
+  #emergency {
+    font-size: 13px;
+  }
 
-          layer1 = 'Winter_Street_Parking_Normal_View_6799'
-          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049'
-          removeAllLayers(layer1, layer2)
-          break;
+  /* Tabs */
+  .btn-group {
+    font-size: 14px;
+  }
+}
 
-          default:
-          console.log('There has been a problem loading the layer')
-          layer1 = null;
-          layer2 = null;
-          removeAllLayers(layer1, layer2)
-        }
-      }
+/* Very small screen heights and landscape orientation (starts at iPhone 5 and below) */
+@media (min-width: 320px) and (orientation: landscape) {
+  .card {
+    max-height: 215px;
+  }
+  /* .esri-ui-corner {
+    max-width: 100%;
+  } */
+  /* .esri-search {
+    width: 250px;
+  } */
+}
 
-      let layer1;
-      let layer2;
+/* Medium screen heights and portrait orientation (starts at iPad and above) */
+@media (min-width: 450px) and (orientation: portrait) {
+  .card {
+    max-height: 215px;
+  }
+  /* .esri-ui-corner {
+    max-width: 100%;
+  }
+  .esri-search {
+    width: 250px;
+  } */
+}
 
-      // Listen for when buttons have been clicked to turn layers on and off in map service.
-      $('.sublayers-item').click(function (e) {
-          var id = e.currentTarget.getAttribute('data-id');
-          statusEvent(id)
-      });
+/* Desktop View (starts at iPad Pro size) */
+@media (min-width: 769px) and (min-height: 500px) {
 
-      $('#layer-carousel').bind('slide.bs.carousel', function (e) {
-        var id = e.relatedTarget.getAttribute('data-id');
-        statusEvent(id)
-      });
+  /* Map div */
+  #viewDiv {
+    padding-top: 70px;
+    padding-bottom: 0;
+  }
 
+  /* Tab bar */
+  .slidemenu {
+    top: 0;
+    height: 70px;
+  }
 
-      ////////////////////////////////////////
-      /// Widgets added to UI containter ////
-      ///////////////////////////////////////
+  .container-fluid {
+    max-width: 700px;
+    ;
+  }
 
-      ///// Search widget
-      var searchWidget = new Search({
-        view: view,
-        popupEnabled: false,
-      });
-      view.ui.add(searchWidget, 'top-right');
+  .card {
+    max-height: 450px;
+  }
 
-      // Change search marker symbol
-      searchWidget.watch('activeSource', function (evt) {
-        console.log(evt, 'here');
-        evt.resultSymbol = marker;
-      });
+  .slidemenu li .icon {
+    line-height: 30px;
+  }
 
-      // Returns search result
-      searchWidget.on('select-result', function (evt) {
-        console.log('search event info: ', JSON.stringify(evt.result.feature));
-        var point = {
-          type: 'point',
-          latitude: evt.result.feature.geometry.latitude,
-          longitude: evt.result.feature.geometry.longitude,
-        };
-        console.log('lat/long result ', point);
-      });
+  .tab-menu li {
+    padding-top: 10px;
+    padding-bottom: 7px;
+  }
 
-      ///// Zoom widget
-      var zoom = new Zoom({
-        view: view
-      });
-      view.ui.add(zoom, 'top-left');
+  .tab-menu li a {
+    font-size: 14px;
+  }
 
-      ///// Home button
-      var home = new Home({
-        view: view,
-      });
-      view.ui.add(home, 'top-left', 0);
+  /* Cards */
+  #status-collapse, #map-collapse, #help-collapse {
+    top: 85px;
+    right: 15px;
+    width: 400px;
+    bottom: auto;
+  }
 
-      ////// Custom marker
-      var marker = {
-        type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
-        color: 'red',
-        size: '18px',
-        outline: {
-        // autocasts as new SimpleLineSymbol()
-        color: [128, 0, 0, 0.5],
-        width: '1.5px',
-        },
-      };
-
-      ///// Locate Button
-      var locate = new Locate({
-        view: view,
-        useHeadingEnabled: false,
-        goToOverride: function (view, options) {
-          options.target.scale = 1500; // Override the default map scale
-          return view.goTo(options.target);
-        },
-      });
-      view.ui.add(locate, 'top-left');
-
-    })
-    .catch(function(error) {
-      console.error('The resource failed to load: ', error);
-    })
-});
-
-
-//////////////////////////////////////////////////////////////////
-  ///// Card button + pop-up control
-  // Remove css classes from select buttons on load
-  $('.phases-button, .map-button, .help-button').removeClass('none');
-
-  $('.tab-menu li a').click(function () {
-    var button = this.classList[0];
-    switch (button) {
-      case 'status-button':
-        $('.map-button, .help-button').removeClass('none');
-        $('#map-collapse, #help-collapse').collapse('hide');
-        $('#collapse-header').collapse('toggle');
-        break;
-
-      case 'map-button':
-        $(this).addClass('none');
-        // $('.status-button').removeClass('active');
-        $('.help-button').removeClass('none');
-        $('#collapse-header, #help-collapse').collapse(
-          'hide'
-        );
-        if ($(this).attr('aria-expanded') === 'true') {
-          console.log('close');
-          $('.map-button').removeClass('none');
-        } else if ($(this).attr('aria-expanded') === 'false') {
-          console.log('open');
-          $('.map-button').addClass('none');
-        } else {
-          console.log('not working');
-        }
-        break;
-
-      case 'help-button':
-        $(this).addClass('none');
-        // $('.status-button').removeClass('active');
-        $('.map-button').removeClass('none');
-        $('#collapse-header, #map-collapse').collapse('hide');
-        if ($(this).attr('aria-expanded') === 'true') {
-          console.log('close');
-          $('.help-button').removeClass('none');
-        } else if ($(this).attr('aria-expanded') === 'false') {
-          console.log('open');
-          $('.help-button').addClass('none');
-        } else {
-          console.log('not working');
-        }
-        break;
-    }
-  });
-
-  // Resets the buttons to grey by clicking card header title.
-  $('.card-header').click(function () {
-    $('.map-button, .help-button').removeClass('none');
-  });
-
-});
+  /* Esri styling */
+  /* .esri-ui-corner {
+    max-width: 100%;
+  }
+  .esri-search {
+    width: 240px;
+  } */
+}
