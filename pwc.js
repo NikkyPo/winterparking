@@ -363,10 +363,55 @@ $(document).ready(function () {
         }
       }
 
-      //// Button event
-      $('.sublayers .sublayers-item').click(function (e) {
-        var id = (e.target.getAttribute('data-id'))
-      });
+      function statusEvent(id){
+        switch (id) {
+          // Night Plow
+          case '1':
+          layers[7].visible = true;
+          layers[6].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Night_Plow_View_7283'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          // Day Plow
+          case '2':
+          layers[5].visible = true;
+          layers[4].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Day_Plow_View_607'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          // Clean Up
+          case '3':
+          layers[3].visible = true;
+          layers[2].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Cleanup_View_4291'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          // Normal
+          case '4':
+          layers[1].visible = true;
+          layers[0].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Normal_View_6799'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          default:
+          console.log('There has been a problem loading the layer')
+          layer1 = null;
+          layer2 = null;
+          removeAllLayers(layer1, layer2)
+        }
+      }
 
       let layer1;
       let layer2;
@@ -374,54 +419,12 @@ $(document).ready(function () {
       // Listen for when buttons have been clicked to turn layers on and off in map service.
       $('.sublayers-item').click(function (e) {
           var id = e.currentTarget.getAttribute('data-id');
+          statusEvent(id)
+      });
 
-          switch (id) {
-            // Night Plow
-            case '1':
-            layers[7].visible = true;
-            layers[6].visible = true;
-
-            layer1 = 'Winter_Street_Parking_Night_Plow_View_7283'
-            layer2 = 'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187'
-            removeAllLayers(layer1, layer2)
-            break;
-
-            // Day Plow
-            case '2':
-            layers[5].visible = true;
-            layers[4].visible = true;
-
-            layer1 = 'Winter_Street_Parking_Day_Plow_View_607'
-            layer2 = 'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109'
-            removeAllLayers(layer1, layer2)
-            break;
-
-            // Clean Up
-            case '3':
-            layers[3].visible = true;
-            layers[2].visible = true;
-
-            layer1 = 'Winter_Street_Parking_Cleanup_View_4291'
-            layer2 = 'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028'
-            removeAllLayers(layer1, layer2)
-            break;
-
-            // Normal
-            case '4':
-            layers[1].visible = true;
-            layers[0].visible = true;
-
-            layer1 = 'Winter_Street_Parking_Normal_View_6799'
-            layer2 = 'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049'
-            removeAllLayers(layer1, layer2)
-            break;
-
-            default:
-            console.log('There has been a problem loading the layer')
-            layer1 = null;
-            layer2 = null;
-            removeAllLayers(layer1, layer2)
-          }
+      $('#layer-carousel').bind('slide.bs.carousel', function (e) {
+        var id = e.relatedTarget.getAttribute('data-id');
+        statusEvent(id)
       });
 
 
