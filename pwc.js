@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  var isTouch =  !!("ontouchstart" in window) || window.navigator.msMaxTouchPoints > 0;
   // Load Modules
   require([
     'esri/WebMap',
@@ -7,16 +8,13 @@ $(document).ready(function () {
     'esri/widgets/Legend',
     'esri/widgets/Search',
     'esri/widgets/Locate',
-    'esri/widgets/LayerList',
-    'esri/layers/FeatureLayer',
     'esri/widgets/BasemapGallery',
-    "esri/Basemap",
+    'esri/Basemap',
     'esri/widgets/BasemapGallery/support/LocalBasemapsSource',
     'esri/core/watchUtils',
     'esri/widgets/Zoom',
-    'dojo/on',
     'dojo/domReady!',
-  ], function (WebMap, MapView, Home, Legend, Search, Locate, LayerList, FeatureLayer, BasemapGallery, Basemap, LocalBasemapsSource, watchUtils, Zoom, on) {
+  ], function (WebMap, MapView, Home, Legend, Search, Locate, BasemapGallery, Basemap, LocalBasemapsSource, watchUtils, Zoom) {
 
     // Global Variables
     let obj;
@@ -42,30 +40,8 @@ $(document).ready(function () {
 
     ///// Load map
     map.load()
-
-    //////// Basemap Gallery
-    .then(
-      // success theWebMap.load
-      function () {
-        var basemapGallery = new BasemapGallery({
-          source: new LocalBasemapsSource({
-            basemaps: [
-              Basemap.fromId('hybrid'), // create a basemap from a well known id
-              Basemap.fromId('streets-navigation-vector'),
-              Basemap.fromId('streets-night-vector')
-            ]
-          }),
-          container: 'map-div',
-          view: view,
-          activeBasemap: 'streets-navigation-vector'
-        });
-
-        // return map.basemap.load();
-      }
-    )
-
-    //// Load current data from Admin Console. Post error if problem arises.
     .then(function(){
+    //// Load current data from Admin Console. Post error if problem arises.
       let url = fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
           method: 'get',
           mode: 'no-cors'
@@ -202,9 +178,27 @@ $(document).ready(function () {
             ];
         return(obj)
       }).catch(function(err) {
-          window.alert('There has been an error loading the data. Please try again.')
+          window.alert('There has been an error loading the data. Please try again.', err)
       });
     })
+
+    .then(function () {
+        // success map.load
+        //////// Basemap Gallery
+        var basemapGallery = new BasemapGallery({
+          source: new LocalBasemapsSource({
+            basemaps: [
+              Basemap.fromId('hybrid'), // create a basemap from a well known id
+              Basemap.fromId('streets-navigation-vector'),
+              Basemap.fromId('streets-night-vector')
+            ]
+          }),
+          container: 'map-div',
+          view: view,
+          activeBasemap: 'streets-navigation-vector'
+        });
+      }
+    )
 
   .then(function() {
     // grab all the layers and load them
@@ -292,12 +286,6 @@ $(document).ready(function () {
         layers[0].visible = true;
       }
     }
-
-    // function updateCarousel() {
-    //   $('#nightPlow-text').text('Active ' + toNight + ' to ' + fromNight);
-    //   $('#dayPlow-text').text('Active ' + toDay + ' to ' + fromDay);
-    //   $('#cleanUp-text').text('Active ' + toClean + ' to ' + fromClean);
-    // }
 
     //// Check if emergency
       switch (emergency) {
@@ -563,17 +551,3 @@ $(document).ready(function () {
   });
 
 });
-
-
-
-// document.addEventListener(
-//   'click',
-//   function (event) {
-//     // Log the clicked element in the console
-//     console.log(event.target);
-//
-//     // If the clicked element doesn't have the right selector, bail
-//     if (!event.target.matches('.click-me')) return;
-//   },
-//   false
-// );
