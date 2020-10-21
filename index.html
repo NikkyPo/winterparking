@@ -20,14 +20,11 @@
     <!-- Esri API for Javascript -->
     <link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/css/main.css" />
     <link rel="stylesheet" href="styles/pwc.css" />
-
     <script src="https://js.arcgis.com/4.16/"></script>
 
-    <script type="text/javascript" src="pwc.js"></script>
   </head>
 
   <body>
-    <div class="message"></div>
     <div id="viewDiv" class=""></div>
 
     <nav class="slidemenu">
@@ -73,9 +70,6 @@
               </a>
             </div>
             <div class="right col-1 px-2 d-flex justify-content-center">
-              <!-- <a data-toggle="collapse" href="#collapse-header" aria-expanded="true" aria-controls="collapse-header" class="status-collapse-heading">
-              <i class="fa fa-times"></i>
-            </a> -->
             </div>
           </div>
           <div class="row">
@@ -131,7 +125,7 @@
               </div>
 
               <div class="carousel-inner">
-                <div id="nightPlow-active" class="carousel-item">
+                <div data-id="1" id="nightPlow-active" class="carousel-item">
                   <div class="container">
                     <div class="row">
                       <div class="col-12">
@@ -141,7 +135,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="dayPlow-active" class="carousel-item">
+                <div data-id="2" id="dayPlow-active" class="carousel-item">
                   <div class="container">
                     <div class="row">
                       <div class="col-12">
@@ -151,7 +145,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="cleanUp-active" class="carousel-item">
+                <div data-id="3" id="cleanUp-active" class="carousel-item">
                   <div class="container">
                     <div class="row">
                       <div class="col-12">
@@ -161,7 +155,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="normal-active" class="carousel-item">
+                <div data-id="4" id="normal-active" class="carousel-item">
                   <div class="container">
                     <div class="row">
                       <div class="col-12">
@@ -220,4 +214,5 @@
       </div>
     </div>
   </body>
+  <script type="text/javascript" src="pwc.js"></script>
 </html>
