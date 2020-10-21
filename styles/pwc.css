@@ -121,7 +121,7 @@ ul li .active {
 }
 
 /* -- Custom cards for 'Map' -- */
-.change-color, .change-color:hover, .change-color:focus, .change-color:active, .change-color:visited {
+.change-color, .change-color:active, .change-color:visited {
   color: #333;
   text-decoration: none;
 }
