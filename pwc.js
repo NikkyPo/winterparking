@@ -1,8 +1,5 @@
 $(document).ready(function () {
-  $('.hover').on('touchstart touchend', function(e) {
-    $(this).toggleClass('hover_effect');
-});
-  var isTouch =  !!("ontouchstart" in window) || window.navigator.msMaxTouchPoints > 0;
+
   // Load Modules
   require([
     'esri/WebMap',
