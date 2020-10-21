@@ -252,32 +252,36 @@ $(document).ready(function () {
 
 
       if((currentTime > nightPlowFrom) && (currentTime < nightPlowTo)){
+        console.log('within nightplow')
         $('#phase').text('Night Plow Active ' + toNight + ' to ' + fromNight);
         $('#nightPlow-button').addClass('active');
-        $('#layer-carousel').find('#nightPlow-active').show();
+        $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
         layers[7].visible = true;
         layers[6].visible = true;
 
       } else if ((currentTime > dayPlowFrom) && (currentTime < dayPlowTo)) {
+        console.log('within dayplow')
         $('#phase').text('Day Plow Active ' + toDay + ' to ' + fromDay);
         $('#dayPlow-button').addClass('active');
-        $('#layer-carousel').find('#nightPlow-active').show();
+        $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
         layers[5].visible = true;
         layers[4].visible = true;
 
       } else if ((currentTime > cleanUpFrom) && (currentTime < cleanUpTo)) {
+        console.log('within cleanup');
         $('#phase').text('Clean Up Active ' + toClean + ' to ' + fromClean);
         $('#cleanUp-button').addClass('active');
-        $('#layer-carousel').find('#cleanUp-active').show();
+        $('#layer-carousel').find('#cleanUp-active').first().addClass('active');
         layers[3].visible = true;
         layers[2].visible = true;
 
       } else {
+        console.log('Outside of times. Put green');
         $('ul li .active').css('color', 'green');
         $('.status-header').css('background-color', 'green');
         $('#emergency').text('NO SNOW EMERGENCY');
         $('#normal-button').addClass('active');
-        $('#layer-carousel').find('#normal-active').show();
+        $('#layer-carousel').find('#normal-active').first().addClass('active');
         layers[1].visible = true;
         layers[0].visible = true;
       }
@@ -360,14 +364,9 @@ $(document).ready(function () {
       }
 
       function statusEvent(id){
-
         switch (id) {
           // Night Plow
           case '1':
-          var target = $("#nightPlow-active")
-          $(".carousel-item").not(target).hide();
-          $(target).show();
-
           layers[7].visible = true;
           layers[6].visible = true;
 
@@ -378,11 +377,6 @@ $(document).ready(function () {
 
           // Day Plow
           case '2':
-          var target = $("#dayPlow-active")
-          $(".carousel-item").not(target).hide();
-          $(target).show();
-          $('#nightPlow-button').removeClass('active');
-
           layers[5].visible = true;
           layers[4].visible = true;
 
@@ -393,10 +387,6 @@ $(document).ready(function () {
 
           // Clean Up
           case '3':
-          var target = $("#cleanUp-active")
-          $(".carousel-item").not(target).hide();
-          $(target).show();
-
           layers[3].visible = true;
           layers[2].visible = true;
 
@@ -407,10 +397,6 @@ $(document).ready(function () {
 
           // Normal
           case '4':
-          var target = $("#normal-active")
-          $(".carousel-item").not(target).hide();
-          $(target).show();
-
           layers[1].visible = true;
           layers[0].visible = true;
 
@@ -435,6 +421,12 @@ $(document).ready(function () {
           var id = e.currentTarget.getAttribute('data-id');
           statusEvent(id)
       });
+
+      $('#layer-carousel').bind('slide.bs.carousel', function (e) {
+        var id = e.relatedTarget.getAttribute('data-id');
+        statusEvent(id)
+      });
+
 
       ////////////////////////////////////////
       /// Widgets added to UI containter ////
