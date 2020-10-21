@@ -1,4 +1,9 @@
 $(document).ready(function () {
+  $('.hover').on('touchstart touchend', function(e) {
+    e.preventDefault();
+    $(this).toggleClass('hover_effect');
+});
+  var isTouch =  !!("ontouchstart" in window) || window.navigator.msMaxTouchPoints > 0;
   // Load Modules
   require([
     'esri/WebMap',
@@ -7,16 +12,13 @@ $(document).ready(function () {
     'esri/widgets/Legend',
     'esri/widgets/Search',
     'esri/widgets/Locate',
-    'esri/widgets/LayerList',
-    'esri/layers/FeatureLayer',
     'esri/widgets/BasemapGallery',
-    "esri/Basemap",
+    'esri/Basemap',
     'esri/widgets/BasemapGallery/support/LocalBasemapsSource',
     'esri/core/watchUtils',
     'esri/widgets/Zoom',
-    'dojo/on',
     'dojo/domReady!',
-  ], function (WebMap, MapView, Home, Legend, Search, Locate, LayerList, FeatureLayer, BasemapGallery, Basemap, LocalBasemapsSource, watchUtils, Zoom, on) {
+  ], function (WebMap, MapView, Home, Legend, Search, Locate, BasemapGallery, Basemap, LocalBasemapsSource, watchUtils, Zoom) {
 
     // Global Variables
     let obj;
@@ -42,30 +44,8 @@ $(document).ready(function () {
 
     ///// Load map
     map.load()
-
-    //////// Basemap Gallery
-    .then(
-      // success theWebMap.load
-      function () {
-        var basemapGallery = new BasemapGallery({
-          source: new LocalBasemapsSource({
-            basemaps: [
-              Basemap.fromId('hybrid'), // create a basemap from a well known id
-              Basemap.fromId('streets-navigation-vector'),
-              Basemap.fromId('streets-night-vector')
-            ]
-          }),
-          container: 'map-div',
-          view: view,
-          activeBasemap: 'streets-navigation-vector'
-        });
-
-        // return map.basemap.load();
-      }
-    )
-
-    //// Load current data from Admin Console. Post error if problem arises.
     .then(function(){
+    //// Load current data from Admin Console. Post error if problem arises.
       let url = fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
           method: 'get',
           mode: 'no-cors'
@@ -202,9 +182,27 @@ $(document).ready(function () {
             ];
         return(obj)
       }).catch(function(err) {
-          window.alert('There has been an error loading the data. Please try again.')
+          window.alert('There has been an error loading the data. Please try again.', err)
       });
     })
+
+    .then(function () {
+        // success map.load
+        //////// Basemap Gallery
+        var basemapGallery = new BasemapGallery({
+          source: new LocalBasemapsSource({
+            basemaps: [
+              Basemap.fromId('hybrid'), // create a basemap from a well known id
+              Basemap.fromId('streets-navigation-vector'),
+              Basemap.fromId('streets-night-vector')
+            ]
+          }),
+          container: 'map-div',
+          view: view,
+          activeBasemap: 'streets-navigation-vector'
+        });
+      }
+    )
 
   .then(function() {
     // grab all the layers and load them
@@ -293,12 +291,6 @@ $(document).ready(function () {
       }
     }
 
-    // function updateCarousel() {
-    //   $('#nightPlow-text').text('Active ' + toNight + ' to ' + fromNight);
-    //   $('#dayPlow-text').text('Active ' + toDay + ' to ' + fromDay);
-    //   $('#cleanUp-text').text('Active ' + toClean + ' to ' + fromClean);
-    // }
-
     //// Check if emergency
       switch (emergency) {
         case emergency === true:
@@ -375,10 +367,55 @@ $(document).ready(function () {
         }
       }
 
-      //// Button event
-      $('.sublayers .sublayers-item').click(function (e) {
-        var id = (e.target.getAttribute('data-id'))
-      });
+      function statusEvent(id){
+        switch (id) {
+          // Night Plow
+          case '1':
+          layers[7].visible = true;
+          layers[6].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Night_Plow_View_7283'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          // Day Plow
+          case '2':
+          layers[5].visible = true;
+          layers[4].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Day_Plow_View_607'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          // Clean Up
+          case '3':
+          layers[3].visible = true;
+          layers[2].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Cleanup_View_4291'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          // Normal
+          case '4':
+          layers[1].visible = true;
+          layers[0].visible = true;
+
+          layer1 = 'Winter_Street_Parking_Normal_View_6799'
+          layer2 = 'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049'
+          removeAllLayers(layer1, layer2)
+          break;
+
+          default:
+          console.log('There has been a problem loading the layer')
+          layer1 = null;
+          layer2 = null;
+          removeAllLayers(layer1, layer2)
+        }
+      }
 
       let layer1;
       let layer2;
@@ -386,54 +423,12 @@ $(document).ready(function () {
       // Listen for when buttons have been clicked to turn layers on and off in map service.
       $('.sublayers-item').click(function (e) {
           var id = e.currentTarget.getAttribute('data-id');
+          statusEvent(id)
+      });
 
-          switch (id) {
-            // Night Plow
-            case '1':
-            layers[7].visible = true;
-            layers[6].visible = true;
-
-            layer1 = 'Winter_Street_Parking_Night_Plow_View_7283'
-            layer2 = 'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187'
-            removeAllLayers(layer1, layer2)
-            break;
-
-            // Day Plow
-            case '2':
-            layers[5].visible = true;
-            layers[4].visible = true;
-
-            layer1 = 'Winter_Street_Parking_Day_Plow_View_607'
-            layer2 = 'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109'
-            removeAllLayers(layer1, layer2)
-            break;
-
-            // Clean Up
-            case '3':
-            layers[3].visible = true;
-            layers[2].visible = true;
-
-            layer1 = 'Winter_Street_Parking_Cleanup_View_4291'
-            layer2 = 'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028'
-            removeAllLayers(layer1, layer2)
-            break;
-
-            // Normal
-            case '4':
-            layers[1].visible = true;
-            layers[0].visible = true;
-
-            layer1 = 'Winter_Street_Parking_Normal_View_6799'
-            layer2 = 'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049'
-            removeAllLayers(layer1, layer2)
-            break;
-
-            default:
-            console.log('There has been a problem loading the layer')
-            layer1 = null;
-            layer2 = null;
-            removeAllLayers(layer1, layer2)
-          }
+      $('#layer-carousel').bind('slide.bs.carousel', function (e) {
+        var id = e.relatedTarget.getAttribute('data-id');
+        statusEvent(id)
       });
 
 
@@ -563,17 +558,3 @@ $(document).ready(function () {
   });
 
 });
-
-
-
-// document.addEventListener(
-//   'click',
-//   function (event) {
-//     // Log the clicked element in the console
-//     console.log(event.target);
-//
-//     // If the clicked element doesn't have the right selector, bail
-//     if (!event.target.matches('.click-me')) return;
-//   },
-//   false
-// );
