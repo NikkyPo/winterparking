@@ -193,6 +193,13 @@ ul li .active {
 
 /* ------------------------------------------------------- */
 /* ---- Media Queries ---- */
+
+@media (hover: hover) {
+  button:hover {
+    color: white;
+    text-decoration: none; /* solves sticky problem */
+  }
+}
 /* Very small screen heights and widths (starts at iPhone 5 and below) */
 @media (max-width: 320px) {
 
