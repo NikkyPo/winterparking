@@ -14,6 +14,7 @@ $(document).ready(function () {
     'esri/core/watchUtils',
     'esri/widgets/Zoom',
     'dojo/domReady!',
+
   ], function (WebMap, MapView, Home, Legend, Search, Locate, BasemapGallery, Basemap, LocalBasemapsSource, watchUtils, Zoom) {
 
     // Global Variables
@@ -437,7 +438,7 @@ $(document).ready(function () {
         view: view,
         popupEnabled: false,
       });
-      view.ui.add(searchWidget, 'top-left');
+      view.ui.add(searchWidget, 'top-right');
 
       // Change search marker symbol
       searchWidget.watch('activeSource', function (evt) {
@@ -457,10 +458,10 @@ $(document).ready(function () {
       });
 
       ///// Zoom widget
-      // var zoom = new Zoom({
-      //   view: view
-      // });
-      // view.ui.add(zoom, 'top-left');
+      var zoom = new Zoom({
+        view: view
+      });
+      view.ui.add(zoom, 'top-left');
 
       ///// Home button
       var home = new Home({
