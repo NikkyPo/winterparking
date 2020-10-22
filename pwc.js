@@ -11,11 +11,12 @@ $(document).ready(function () {
     'esri/widgets/BasemapGallery',
     'esri/Basemap',
     'esri/widgets/BasemapGallery/support/LocalBasemapsSource',
+    "esri/widgets/Track",
     'esri/core/watchUtils',
     'esri/widgets/Zoom',
     'dojo/domReady!',
 
-  ], function (WebMap, MapView, Home, Legend, Search, Locate, BasemapGallery, Basemap, LocalBasemapsSource, watchUtils, Zoom) {
+  ], function (WebMap, MapView, Home, Legend, Search, Locate, BasemapGallery, Basemap, LocalBasemapsSource, Track, watchUtils, Zoom) {
 
     // Global Variables
     let obj;
@@ -454,14 +455,26 @@ $(document).ready(function () {
           latitude: evt.result.feature.geometry.latitude,
           longitude: evt.result.feature.geometry.longitude,
         };
-        console.log('lat/long result ', point);
       });
+
+      // Collapse all panels on search clicked
+      searchWidget.on('search-focus', function(evt){
+        $('.map-button, .help-button').removeClass('none');
+        $('#map-collapse, #help-collapse, #collapse-header').collapse('hide');
+      })
+
 
       ///// Zoom widget
       var zoom = new Zoom({
         view: view
       });
       view.ui.add(zoom, 'top-left');
+
+      var trackWidget = new Track({
+  view: view
+});
+
+view.ui.add(trackWidget, "top-left");
 
       ///// Home button
       var home = new Home({
@@ -502,7 +515,7 @@ $(document).ready(function () {
 //////////////////////////////////////////////////////////////////
   ///// Card button + pop-up control
   // Remove css classes from select buttons on load
-  $('.phases-button, .map-button, .help-button').removeClass('none');
+  $('.map-button, .help-button').removeClass('none');
 
   $('.tab-menu li a').click(function () {
     var button = this.classList[0];
@@ -521,10 +534,8 @@ $(document).ready(function () {
           'hide'
         );
         if ($(this).attr('aria-expanded') === 'true') {
-          console.log('close');
           $('.map-button').removeClass('none');
         } else if ($(this).attr('aria-expanded') === 'false') {
-          console.log('open');
           $('.map-button').addClass('none');
         } else {
           console.log('not working');
@@ -537,10 +548,8 @@ $(document).ready(function () {
         $('.map-button').removeClass('none');
         $('#collapse-header, #map-collapse').collapse('hide');
         if ($(this).attr('aria-expanded') === 'true') {
-          console.log('close');
           $('.help-button').removeClass('none');
         } else if ($(this).attr('aria-expanded') === 'false') {
-          console.log('open');
           $('.help-button').addClass('none');
         } else {
           console.log('not working');
@@ -553,5 +562,17 @@ $(document).ready(function () {
   $('.card-header').click(function () {
     $('.map-button, .help-button').removeClass('none');
   });
+
+  document.addEventListener(
+  'click',
+  function (event) {
+    // Log the clicked element in the console
+    console.log(event.target);
+
+    // If the clicked element doesn't have the right selector, bail
+    if (!event.target.matches('.click-me')) return;
+  },
+  false
+);
 
 });
