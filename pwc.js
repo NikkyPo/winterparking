@@ -7,19 +7,18 @@ $(document).ready(function () {
     'esri/widgets/Home',
     'esri/widgets/Legend',
     'esri/widgets/Search',
-    'esri/widgets/Locate',
     'esri/widgets/BasemapGallery',
     'esri/Basemap',
-    'esri/widgets/BasemapGallery/support/LocalBasemapsSource',
     "esri/widgets/Track",
     'esri/core/watchUtils',
     'esri/widgets/Zoom',
     'dojo/domReady!',
 
-  ], function (WebMap, MapView, Home, Legend, Search, Locate, BasemapGallery, Basemap, LocalBasemapsSource, Track, watchUtils, Zoom) {
+  ], function (WebMap, MapView, Home, Legend, Search, BasemapGallery, Basemap, Track, watchUtils, Zoom) {
 
     // Global Variables
     let obj;
+    let basemapGallery;
 
     ///// Web Map
     var map = new WebMap({
@@ -187,14 +186,12 @@ $(document).ready(function () {
     .then(function () {
         // success map.load
         //////// Basemap Gallery
-        var basemapGallery = new BasemapGallery({
-          source: new LocalBasemapsSource({
-            basemaps: [
+        basemapGallery = new BasemapGallery({
+          source: [
               Basemap.fromId('hybrid'), // create a basemap from a well known id
               Basemap.fromId('streets-navigation-vector'),
               Basemap.fromId('streets-night-vector')
-            ]
-          }),
+            ],
           container: 'map-div',
           view: view,
           activeBasemap: 'streets-navigation-vector'
@@ -354,6 +351,11 @@ $(document).ready(function () {
       cleanUplegend.respectLayerVisibility = false;
       normallegend.respectLayerVisibility = false;
 
+      // Define Basemap titles
+      basemapGallery.source.basemaps.items[0].title = 'Satellite';
+      basemapGallery.source.basemaps.items[1].title = 'Street Map';
+      basemapGallery.source.basemaps.items[2].title = 'Street Map (Night)'
+
 
       // Removes all layers except for basemaps
       function removeAllLayers(layer1, layer2) {
@@ -443,7 +445,6 @@ $(document).ready(function () {
 
       // Change search marker symbol
       searchWidget.watch('activeSource', function (evt) {
-        console.log(evt, 'here');
         evt.resultSymbol = marker;
       });
 
@@ -470,41 +471,51 @@ $(document).ready(function () {
       });
       view.ui.add(zoom, 'top-left');
 
-      var trackWidget = new Track({
-  view: view
-});
-
-view.ui.add(trackWidget, "top-left");
-
       ///// Home button
       var home = new Home({
         view: view,
       });
       view.ui.add(home, 'top-left', 0);
 
+      ///// Track user location
+      var track = new Track({
+        view: view
+      });
+      view.ui.add(track, "top-left");
+
+      // Start tracking your location once view is ready
+      // track.start();
+
       ////// Custom marker
       var marker = {
         type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
         color: 'red',
-        size: '18px',
+        size: '15px',
         outline: {
         // autocasts as new SimpleLineSymbol()
-        color: [128, 0, 0, 0.5],
+        color: [128, 0, 0],
         width: '1.5px',
         },
       };
 
-      ///// Locate Button
-      var locate = new Locate({
-        view: view,
-        useHeadingEnabled: false,
-        goToOverride: function (view, options) {
-          options.target.scale = 1500; // Override the default map scale
-          return view.goTo(options.target);
-        },
-      });
-      view.ui.add(locate, 'top-left');
+      // Mobile vs Desktop functions
+      // Define mobile size
 
+      // var mobileWidth = 769;
+      // var mobileHeight = 500;
+      //
+      // // Watch size changes
+      // watchUtils.init(view, "size", function(size) {
+      //   if((view.width > mobileWidth) && (view.height > mobileHeight)){
+      //     setTitleVisible(mobileWidth);
+      //   }
+      // });
+      //
+      // // Show/hide elements, add/remove padding
+      // function setTitleVisible(visible) {
+      //   if (visible) {
+      //     console.log('visible desktop');}
+      //   }
     })
     .catch(function(error) {
       console.error('The resource failed to load: ', error);
@@ -562,17 +573,5 @@ view.ui.add(trackWidget, "top-left");
   $('.card-header').click(function () {
     $('.map-button, .help-button').removeClass('none');
   });
-
-  document.addEventListener(
-  'click',
-  function (event) {
-    // Log the clicked element in the console
-    console.log(event.target);
-
-    // If the clicked element doesn't have the right selector, bail
-    if (!event.target.matches('.click-me')) return;
-  },
-  false
-);
 
 });
