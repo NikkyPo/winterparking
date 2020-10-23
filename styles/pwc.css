@@ -78,6 +78,10 @@ ul li .active {
   width: 100%;
 }
 
+.accordion>.card>.card-header {
+  margin-bottom: 0;
+}
+
 .card {
   max-height: 250px;
   border-radius: 0;
@@ -269,12 +273,11 @@ ul li .active {
     margin-left: 15%;
     margin-right: 15%;
   }
-  /* .esri-ui-corner {
-    max-width: 100%;
-  } */
-  /* .esri-search {
-    width: 250px;
-  } */
+  /* esri search bar styling */
+  .esri-ui-top-right {
+    left: 45px;
+    right: auto;
+  }
 }
 
 /* Desktop View (starts at iPad Pro size) */
@@ -282,14 +285,15 @@ ul li .active {
 
   /* Map div */
   #viewDiv {
-    padding-top: 70px;
+    padding-top: 0;
     padding-bottom: 0;
   }
 
   /* Tab bar */
   .slidemenu {
-    top: 0;
     height: 70px;
+    width: 430px;
+    left: 0;
   }
 
   .container-fluid {
@@ -316,18 +320,8 @@ ul li .active {
 
   /* Cards */
   #status-collapse, #map-collapse, #help-collapse {
-    top: 85px;
-    right: 15px;
     width: 430px;
-    bottom: auto;
-  }
-
-  /* Carrot transition */
-  .card-header .fa {
-    transition: .3s transform ease-in-out;
-  }
-  .card-header .collapsed .fa {
-    transform: rotate(180deg);
+    bottom: 70px;
   }
 
   /* esri search bar styling */
