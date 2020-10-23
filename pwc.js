@@ -159,8 +159,8 @@ $(document).ready(function () {
                 ],
                 field_clean_up_phase: [
                   {
-                    value: '2020-10-14T15:16:20-05:00',
-                    end_value: '2020-10-20T15:42:20-05:00',
+                    value: '2020-10-14T17:00:20-05:00',
+                    end_value: '2020-10-20T20:00:20-05:00',
                   }
                 ],
                 field_day_plow_phase: [
@@ -252,7 +252,7 @@ $(document).ready(function () {
 
       if((currentTime > nightPlowFrom) && (currentTime < nightPlowTo)){
         console.log('within nightplow')
-        $('#phase').text('Night Plow Active ' + toNight + ' to ' + fromNight);
+        $('#phase').text('Night Plow Active ' + fromNight + ' to ' + toNight);
         $('#nightPlow-button').addClass('active');
         $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
         layers[7].visible = true;
@@ -260,7 +260,7 @@ $(document).ready(function () {
 
       } else if ((currentTime > dayPlowFrom) && (currentTime < dayPlowTo)) {
         console.log('within dayplow')
-        $('#phase').text('Day Plow Active ' + toDay + ' to ' + fromDay);
+        $('#phase').text('Day Plow Active ' + fromDay + ' to ' + toDay);
         $('#dayPlow-button').addClass('active');
         $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
         layers[5].visible = true;
@@ -268,7 +268,7 @@ $(document).ready(function () {
 
       } else if ((currentTime > cleanUpFrom) && (currentTime < cleanUpTo)) {
         console.log('within cleanup');
-        $('#phase').text('Clean Up Active ' + toClean + ' to ' + fromClean);
+        $('#phase').text('Clean Up Active ' + fromClean + ' to ' + toClean);
         $('#cleanUp-button').addClass('active');
         $('#layer-carousel').find('#cleanUp-active').first().addClass('active');
         layers[3].visible = true;
@@ -314,7 +314,7 @@ $(document).ready(function () {
         view: view,
         layerInfos: [{
           layer: layers[7],
-          title: 'Night Plow Routes (' + toNight + ' - ' + fromNight + ')'
+          title: 'Night Plow Routes (' + fromNight + ' - ' + toNight + ')'
         }],
         container: 'nightPlow-div'
       });
@@ -323,7 +323,7 @@ $(document).ready(function () {
         view: view,
         layerInfos: [{
           layer: layers[5],
-          title: 'Day Plow Routes (' + toDay + ' - ' + fromDay + ')'
+          title: 'Day Plow Routes (' + fromDay + ' - ' + toDay + ')'
         }],
         container: 'dayPlow-div'
       });
@@ -332,7 +332,7 @@ $(document).ready(function () {
         view: view,
         layerInfos: [{
           layer: layers[3],
-          title: 'Cleanup Phase (' + toClean + ' - ' + fromClean + ')'
+          title: 'Cleanup Phase (' + fromClean + ' - ' + toClean + ')  Parking allowed only where plowed to the curb'
         }],
         container: 'cleanUp-div'
       });
