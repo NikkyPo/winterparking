@@ -55,6 +55,7 @@
       </div>
     </nav>
 
+    <!-- Status card -->
     <div class="accordion" id="status-collapse">
       <div class="card">
         <div class="card-header status-header" data-toggle="collapse" href="#collapse-header" aria-expanded="true" aria-controls="collapse-header">
@@ -214,42 +215,5 @@
       </div>
     </div>
   </body>
-  <script type="text/javascript">
-  var mobileNoHoverState = function() {
-
-      var hoverClass = 'hover',
-          $target = $(".foo"),
-          preventMouseover = false;
-
-      function forTouchstart() {
-          preventMouseover = true;
-      }
-
-      function forMouseover() {
-          if (preventMouseover === false) {
-              $(this).addClass(hoverClass);
-          } else {
-              preventMouseover = false;
-          }
-      }
-
-      function forMouseout() {
-          $(this).removeClass(hoverClass);
-      }
-
-      function init() {
-          $target.on({
-              touchstart  : forTouchstart,
-              mouseover   : forMouseover,
-              mouseout    : forMouseout
-          });
-      }
-
-      return {
-          init: init
-      };
-  }();
-  mobileNoHoverState.init();   
-  </script>
   <script type="text/javascript" src="pwc.js"></script>
 </html>
