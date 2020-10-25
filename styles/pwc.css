@@ -78,6 +78,10 @@ ul li .active {
   width: 100%;
 }
 
+.accordion>.card>.card-header {
+  margin-bottom: 0;
+}
+
 .card {
   max-height: 250px;
   border-radius: 0;
@@ -132,11 +136,6 @@ ul li .active {
   text-decoration: none;
 }
 
-.accordion>.card>.card-header {
-    margin-bottom: 0;
-}
-
-
 /* Tabs */
 .btn-group {
   font-size: 15px;
@@ -166,6 +165,9 @@ ul li .active {
 } */
 .esri-legend__layer-caption {
   display: none !important;
+}
+.esri-legend__layer-cell--info {
+  width: 100%;
 }
 
 /* ------------------------------------------------------- */
@@ -230,10 +232,14 @@ ul li .active {
   }
 }
 
+.esri-search {
+  width: 215px;
+}
+
 /* Very small screen heights and landscape orientation (starts at iPhone 5 and below) */
 @media (min-width: 320px) and (orientation: landscape) {
   .card {
-    max-height: 215px;
+    max-height: 205px;
   }
   /* .esri-ui-corner {
     max-width: 100%;
@@ -243,11 +249,13 @@ ul li .active {
   } */
 }
 
+
 /* Medium screen heights and portrait orientation (starts at iPad and above) */
 @media (min-width: 450px) and (orientation: portrait) {
   .card {
-    max-height: 215px;
+    max-height: 300px;
   }
+
   /* .esri-ui-corner {
     max-width: 100%;
   }
@@ -256,19 +264,36 @@ ul li .active {
   } */
 }
 
+/* Screens below desktop size increase content margins */
+@media (max-width: 769px) and (orientation: landscape) {
+  .container, .container-fluid, .container-lg, .container-md, .container-sm {
+    padding: 5px;
+  }
+  .card-body {
+    margin-left: 15%;
+    margin-right: 15%;
+  }
+  /* esri search bar styling */
+  .esri-ui-top-right {
+    left: 45px;
+    right: auto;
+  }
+}
+
 /* Desktop View (starts at iPad Pro size) */
 @media (min-width: 769px) and (min-height: 500px) {
 
   /* Map div */
   #viewDiv {
-    padding-top: 70px;
+    padding-top: 0;
     padding-bottom: 0;
   }
 
   /* Tab bar */
   .slidemenu {
-    top: 0;
     height: 70px;
+    width: 430px;
+    left: 0;
   }
 
   .container-fluid {
@@ -295,17 +320,13 @@ ul li .active {
 
   /* Cards */
   #status-collapse, #map-collapse, #help-collapse {
-    top: 85px;
-    right: 15px;
-    width: 400px;
-    bottom: auto;
+    width: 430px;
+    bottom: 70px;
   }
 
-  /* Esri styling */
-  /* .esri-ui-corner {
-    max-width: 100%;
+  /* esri search bar styling */
+  .esri-ui-top-right {
+    left: 45px;
+    right: auto;
   }
-  .esri-search {
-    width: 240px;
-  } */
 }
