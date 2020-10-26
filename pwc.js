@@ -128,9 +128,10 @@ $(document).ready(function () {
                 Basemap.fromId('streets-night-vector')
               ],
             container: 'map-div',
-            view: view
+            view: view,
+            activeBasemap: 'streets-navigation-vector'
           });
-          map.basemap = 'streets-navigation-vector'
+
         })
         .then(function() {
           // grab all the layers and load them
@@ -255,20 +256,20 @@ $(document).ready(function () {
                   ],
                   field_clean_up_phase: [
                     {
-                      value: '2020-10-25T17:00:20-05:00',
-                      end_value: '2020-10-29T20:00:20-05:00',
+                      value: '2020-10-29T17:00:20-05:00',
+                      end_value: '2020-10-31T20:00:20-05:00',
                     }
                   ],
                   field_day_plow_phase: [
                     {
-                      value: '2020-10-24T08:00:20-05:00',
-                      end_value: '2020-10-25T17:00:20-05:00',
+                      value: '2020-10-26T08:00:20-05:00',
+                      end_value: '2020-10-29T17:00:20-05:00',
                     }
                   ],
                   field_night_plow_phase: [
                     {
                       value: '2020-10-23T21:00:20-05:00',
-                      end_value: '2020-10-24T07:00:20-05:00',
+                      end_value: '2020-10-26T07:00:20-05:00',
                     },
                   ],
                 },
