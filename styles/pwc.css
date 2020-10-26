@@ -100,12 +100,25 @@ ul li .active {
   overflow: auto;
 }
 
-/* -- Custom cards for 'Current Status' -- */
+/* -- Custom cards-- */
 .status-header {
   height: 70px;
 }
+.help ul {
+  padding-left: 10px;
+  font-size: 14px;
+}
+.help li {
+  padding-top: 10px;
+}
+
 .status-collapse-heading, .status-collapse-heading:hover, .status-collapse-heading:focus, .status-collapse-heading:active, .status-collapse-heading:visited {
   color: white;
+  text-decoration: none;
+}
+
+.change-color, .change-color:hover, .change-color:focus, .change-color:active, .change-color:visited {
+  color: #333;
   text-decoration: none;
 }
 
@@ -122,18 +135,6 @@ ul li .active {
 }
 #phase {
   font-size: 14px;
-}
-
-/* -- Custom cards for 'Map' -- */
-.change-color, .change-color:hover, .change-color:focus, .change-color:active, .change-color:visited {
-  color: #333;
-  text-decoration: none;
-}
-
-/* -- Custom cards for 'Current Status' -- */
-.status-collapse-heading, .status-collapse-heading:hover, .status-collapse-heading:focus, .status-collapse-heading:active, .status-collapse-heading:visited {
-  color: white;
-  text-decoration: none;
 }
 
 /* Tabs */
