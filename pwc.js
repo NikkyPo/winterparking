@@ -128,9 +128,9 @@ $(document).ready(function () {
                 Basemap.fromId('streets-night-vector')
               ],
             container: 'map-div',
-            view: view,
-            activeBasemap: 'streets-navigation-vector'
+            view: view
           });
+          map.basemap = 'streets-navigation-vector'
         })
         .then(function() {
           // grab all the layers and load them
@@ -143,6 +143,7 @@ $(document).ready(function () {
           return Promise.all(promises.toArray());
         })
         .then(function(layers) {
+
           // Data here (data)
           let obj = [
                 {
@@ -274,9 +275,7 @@ $(document).ready(function () {
               ];
           view.map = map;
 
-
           let layer1, layer2
-
 
           // Options for timestamp visualization
           const options = {
