@@ -12,7 +12,6 @@ $(document).ready(function () {
     "esri/widgets/Track",
     'esri/core/watchUtils',
     'esri/widgets/Zoom',
-    'dojo/domReady!',
 
   ], function (WebMap, MapView, Home, Legend, Search, BasemapGallery, Basemap, Track, watchUtils, Zoom) {
 
@@ -97,20 +96,23 @@ $(document).ready(function () {
     ///// Begin app /////
     ////////////////////
 
-    // Load data first, then load results.
+    // Try loading Admin Console data first, then load results.
     async function getJSON() {
-      let data = await (await fetch('https://jsonplaceholder.typicode.com/users').catch(handleErr)).json();
+      let data = await (await fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
+          method: 'get'
+      }).catch(handleErr)).json()
         if(data.code && data.code == 400){
           alert(data.message);
+          normalParking()
         }
         return data;
     }
-
+    // If there was a problem with request, user will see an alert message.
     function handleErr(err){
       let resp = new Response(
         JSON.stringify({
           code: 400,
-          message: 'There was a problem loading the data. Please reload your browser'
+          message: 'There was a problem and current status will not be shown. Please reload the webpage.'
         })
       );
       return resp;
@@ -131,7 +133,6 @@ $(document).ready(function () {
             view: view,
             activeBasemap: 'streets-navigation-vector'
           });
-
         })
         .then(function() {
           // grab all the layers and load them
@@ -139,13 +140,15 @@ $(document).ready(function () {
           const promises = allLayers.map(function(layer) {
             // Turn off all layers except basemap
               layer.visible = false;
-            return layer.load();
+            return layer;
           });
+          // Return layer promise
           return Promise.all(promises.toArray());
         })
         .then(function(layers) {
 
-          // Data here (data)
+          // Admin console data can be used here
+          // let obj = data[0]
           let obj = [
                 {
                   nid: [
@@ -262,8 +265,8 @@ $(document).ready(function () {
                   ],
                   field_day_plow_phase: [
                     {
-                      value: '2020-10-26T08:00:20-05:00',
-                      end_value: '2020-10-29T17:00:20-05:00',
+                      value: '2019-10-26T08:00:20-05:00',
+                      end_value: '2019-10-29T17:00:20-05:00',
                     }
                   ],
                   field_night_plow_phase: [
@@ -299,8 +302,19 @@ $(document).ready(function () {
           let cleanUpFrom = new Date(cleanUp[0].value).getTime()
           let cleanUpTo = new Date(cleanUp[0].end_value).getTime()
 
-          let emergency = obj[0].status[0].value;
           let currentTime = Date.now()
+
+          // Call function when normal parking in effect or a map error happens
+          function normalParking(){
+            console.log('Outside of times. Put green');
+            $('ul li .active').css('color', 'green');
+            $('.status-header').css('background-color', 'green');
+            $('#emergency').text('Normal Parking');
+            $('#normal-button').addClass('active');
+            $('#layer-carousel').find('#normal-active').first().addClass('active');
+            layers[1].visible = true;
+            layers[0].visible = true;
+          }
 
           // Update UI banner with timestamp
           function updateBanner() {
@@ -312,7 +326,6 @@ $(document).ready(function () {
 
             toClean = new Date(cleanUpTo).toLocaleTimeString('en-US', options);
             fromClean = new Date(cleanUpFrom).toLocaleTimeString('en-US', options);
-
 
             if((currentTime > nightPlowFrom) && (currentTime < nightPlowTo)){
               console.log('within nightplow')
@@ -339,37 +352,17 @@ $(document).ready(function () {
               layers[2].visible = true;
 
             } else {
-              console.log('Outside of times. Put green');
-              $('ul li .active').css('color', 'green');
-              $('.status-header').css('background-color', 'green');
-              $('#emergency').text('Normal Parking');
-              $('#normal-button').addClass('active');
-              $('#layer-carousel').find('#normal-active').first().addClass('active');
-              layers[1].visible = true;
-              layers[0].visible = true;
+              normalParking()
             }
           }
 
-          //// Check if emergency
-            switch (emergency) {
-              case emergency === true:
-                $('ul li .active').css('color', 'red');
-                $('.status-header').css('background-color', 'red');
-                $('#emergency').text('SNOW EMERGENCY DECLARED');
-                updateBanner()
-                // updateCarousel()
-              break;
-
-              default:
-                $('ul li .active').css('color', 'green');
-                $('.status-header').css('background-color', 'green');
-                $('#emergency').text('NO SNOW EMERGENCY');
-                $('#phase').text('Normal Parking Active');
-                $('#normal-button').addClass('active');
-                // $('#normal-text').addClass('active');
-                layers[2].visible = true;
-                layers[1].visible = true;
-            }
+          //// Check if emergency. Current time is between night plow start time and clean up end time.
+          if((currentTime >= nightPlowFrom) && (currentTime <= cleanUpTo)){
+            $('ul li .active').css('color', 'red');
+            $('.status-header').css('background-color', 'red');
+            $('#emergency').text('SNOW EMERGENCY DECLARED');
+            updateBanner()
+          }
 
 
             //////// Legend
@@ -378,7 +371,7 @@ $(document).ready(function () {
               view: view,
               layerInfos: [{
                 layer: layers[7],
-                title: 'Night Plow Routes (' + fromNight + ' - ' + toNight + ')'
+                title: 'Night Plow Routes (9:00 PM - 7:00 AM)'
               }],
               container: 'nightPlow-div'
             });
@@ -387,7 +380,7 @@ $(document).ready(function () {
               view: view,
               layerInfos: [{
                 layer: layers[5],
-                title: 'Day Plow Routes (' + fromDay + ' - ' + toDay + ')'
+                title: 'Day Plow Routes (8:00 AM - 5:00 PM)'
               }],
               container: 'dayPlow-div'
             });
@@ -432,6 +425,7 @@ $(document).ready(function () {
               }
             }
 
+            // Turns layers on and off depending on the button click event id
             function statusEvent(id){
               switch (id) {
                 // Night Plow
@@ -496,6 +490,7 @@ $(document).ready(function () {
         })
         .catch(function(err) {
             console.log(`Error: ${err}`)
+            normalParking()
         });
     });
   });
@@ -504,6 +499,7 @@ $(document).ready(function () {
   // Remove css classes from select buttons on load
   $('.map-button, .help-button').removeClass('none');
 
+  // Change button color 'on-click'
   $('.tab-menu li a').click(function () {
     var button = this.classList[0];
     switch (button) {
@@ -515,7 +511,6 @@ $(document).ready(function () {
 
       case 'map-button':
         $(this).addClass('none');
-        // $('.status-button').removeClass('active');
         $('.help-button').removeClass('none');
         $('#collapse-header, #help-collapse').collapse(
           'hide'
@@ -531,7 +526,6 @@ $(document).ready(function () {
 
       case 'help-button':
         $(this).addClass('none');
-        // $('.status-button').removeClass('active');
         $('.map-button').removeClass('none');
         $('#collapse-header, #map-collapse').collapse('hide');
         if ($(this).attr('aria-expanded') === 'true') {
