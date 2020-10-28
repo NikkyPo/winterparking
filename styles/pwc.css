@@ -10,7 +10,7 @@ html, body, #viewDiv {
 .btn:hover {
   background-color: white;
   color: black;
-  border-color: grey;
+  border-color: #666;
 }
 
 /* ------------------------------------------------------- */
@@ -336,5 +336,12 @@ ul li .active {
   .esri-ui-top-right {
     left: 45px;
     right: auto;
+  }
+  
+    /* Change hover styling mobile*/
+  .btn:hover {
+    background-color: white;
+    color: black;
+    border-color: grey;
   }
 }
