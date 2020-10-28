@@ -112,7 +112,7 @@ $(document).ready(function () {
       let resp = new Response(
         JSON.stringify({
           code: 400,
-          message: 'There was a problem and current status will not be shown. Please reload the webpage.'
+          message: 'There was a problem showing the current status. Please reload the webpage.'
         })
       );
       return resp;
