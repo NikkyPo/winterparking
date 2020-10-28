@@ -98,7 +98,7 @@ $(document).ready(function () {
 
     // Try loading Admin Console data first, then load results.
     async function getJSON() {
-      let data = await (await fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
+      let data = await (await fetch('https://jsonplaceholder.typicode.com/users', {
           method: 'get'
       }).catch(handleErr)).json()
         if(data.code && data.code == 400){
