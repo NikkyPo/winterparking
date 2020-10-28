@@ -8,7 +8,9 @@ html, body, #viewDiv {
 
 /* Remove button hover */
 .btn:hover {
-    background-color: inherit;
+  background-color: white;
+  color: black;
+  border-color: grey;
 }
 
 /* ------------------------------------------------------- */
