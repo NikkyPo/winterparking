@@ -6,7 +6,7 @@ html, body, #viewDiv {
   font-family: "Avenir Next W00", "Avenir Next", Avenir;
 }
 
-/* Remove button hover */
+/* Change hover styling mobile*/
 .btn:hover {
   background-color: white;
   color: black;
@@ -337,8 +337,8 @@ ul li .active {
     left: 45px;
     right: auto;
   }
-  
-    /* Change hover styling mobile*/
+
+  /* Change hover styling mobile*/
   .btn:hover {
     background-color: white;
     color: black;
