@@ -89,8 +89,17 @@ $(document).ready(function () {
     });
     view.ui.add(track, "top-left");
 
-    // Start tracking your location once view is ready
-    // track.start();
+    ///// Load Basemap Gallery /////
+    let basemapGallery = new BasemapGallery({
+     source: [
+         Basemap.fromId('hybrid'), // create a basemap from a well known id
+         Basemap.fromId('streets-navigation-vector'),
+         Basemap.fromId('streets-night-vector')
+       ],
+     container: 'map-div',
+     view: view,
+     activeBasemap: 'streets-navigation-vector'
+   });
 
     ////////////////////
     ///// Begin app /////
@@ -98,12 +107,11 @@ $(document).ready(function () {
 
     // Try loading Admin Console data first, then load results.
     async function getJSON() {
-      let data = await (await fetch('https://jsonplaceholder.typicode.com/users', {
-          method: 'get'
-      }).catch(handleErr)).json()
+      let data = await (await fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
+          method: 'get',
+      }).catch(handleErr)).json();
         if(data.code && data.code == 400){
           alert(data.message);
-          normalParking()
         }
         return data;
     }
@@ -112,41 +120,25 @@ $(document).ready(function () {
       let resp = new Response(
         JSON.stringify({
           code: 400,
-          message: 'There was a problem showing the current status. Please reload the webpage.'
+          message: 'There was a problem and current status will not be shown. Please reload the webpage.'
         })
       );
       return resp;
     }
-
     getJSON().then(function(data) {
-      let basemapGallery;
         map.load()
-        .then(function() {
-          //////// Basemap Gallery
-           basemapGallery = new BasemapGallery({
-            source: [
-                Basemap.fromId('hybrid'), // create a basemap from a well known id
-                Basemap.fromId('streets-navigation-vector'),
-                Basemap.fromId('streets-night-vector')
-              ],
-            container: 'map-div',
-            view: view,
-            activeBasemap: 'streets-navigation-vector'
-          });
-        })
         .then(function() {
           // grab all the layers and load them
           const allLayers = map.allLayers;
           const promises = allLayers.map(function(layer) {
             // Turn off all layers except basemap
-              layer.visible = false;
+            layer.visible = false;
             return layer;
           });
           // Return layer promise
           return Promise.all(promises.toArray());
         })
         .then(function(layers) {
-
           // Admin console data can be used here
           // let obj = data[0]
           let obj = [
@@ -277,9 +269,9 @@ $(document).ready(function () {
                   ],
                 },
               ];
-          view.map = map;
 
-          let layer1, layer2
+          // Turn on Basemap Layer
+          layers[0].visible = true;
 
           // Options for timestamp visualization
           const options = {
@@ -287,33 +279,34 @@ $(document).ready(function () {
              hour:  'numeric',
              minute: 'numeric'
           };
-
+          
+          let layer1, layer2;
           let toNight, fromNight, toDay, fromDay, toClean, fromClean;
 
           let nightPlow = obj[0].field_night_plow_phase;
-          let nightPlowFrom = new Date(nightPlow[0].value).getTime()
-          let nightPlowTo = new Date(nightPlow[0].end_value).getTime()
+          let nightPlowFrom = new Date(nightPlow[0].value).getTime();
+          let nightPlowTo = new Date(nightPlow[0].end_value).getTime();
 
           let dayPlow = obj[0].field_day_plow_phase;
-          let dayPlowFrom = new Date(dayPlow[0].value).getTime()
-          let dayPlowTo = new Date(dayPlow[0].end_value).getTime()
+          let dayPlowFrom = new Date(dayPlow[0].value).getTime();
+          let dayPlowTo = new Date(dayPlow[0].end_value).getTime();
 
           let cleanUp = obj[0].field_clean_up_phase;
-          let cleanUpFrom = new Date(cleanUp[0].value).getTime()
-          let cleanUpTo = new Date(cleanUp[0].end_value).getTime()
+          let cleanUpFrom = new Date(cleanUp[0].value).getTime();
+          let cleanUpTo = new Date(cleanUp[0].end_value).getTime();
 
-          let currentTime = Date.now()
+          let currentTime = Date.now();
 
           // Call function when normal parking in effect or a map error happens
           function normalParking(){
             console.log('Outside of times. Put green');
+            layers[1].visible = true;
+            layers[2].visible = true;
             $('ul li .active').css('color', 'green');
             $('.status-header').css('background-color', 'green');
             $('#emergency').text('Normal Parking');
             $('#normal-button').addClass('active');
             $('#layer-carousel').find('#normal-active').first().addClass('active');
-            layers[1].visible = true;
-            layers[0].visible = true;
           }
 
           // Update UI banner with timestamp
@@ -328,31 +321,31 @@ $(document).ready(function () {
             fromClean = new Date(cleanUpFrom).toLocaleTimeString('en-US', options);
 
             if((currentTime > nightPlowFrom) && (currentTime < nightPlowTo)){
-              console.log('within nightplow')
+              console.log('within nightplow');
+              layers[7].visible = true;
+              layers[6].visible = true;
               $('#phase').text('Night Plow Active ' + fromNight + ' to ' + toNight);
               $('#nightPlow-button').addClass('active');
               $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
-              layers[7].visible = true;
-              layers[6].visible = true;
 
             } else if ((currentTime > dayPlowFrom) && (currentTime < dayPlowTo)) {
-              console.log('within dayplow')
+              console.log('within dayplow');
+              layers[5].visible = true;
+              layers[4].visible = true;
               $('#phase').text('Day Plow Active ' + fromDay + ' to ' + toDay);
               $('#dayPlow-button').addClass('active');
               $('#layer-carousel').find('#dayPlow-active').first().addClass('active');
-              layers[5].visible = true;
-              layers[4].visible = true;
 
             } else if ((currentTime > cleanUpFrom) && (currentTime < cleanUpTo)) {
               console.log('within cleanup');
+              layers[3].visible = true;
+              layers[2].visible = true;
               $('#phase').text('Clean Up Active');
               $('#cleanUp-button').addClass('active');
               $('#layer-carousel').find('#cleanUp-active').first().addClass('active');
-              layers[3].visible = true;
-              layers[2].visible = true;
 
             } else {
-              normalParking()
+              normalParking();
             }
           }
 
@@ -361,9 +354,8 @@ $(document).ready(function () {
             $('ul li .active').css('color', 'red');
             $('.status-header').css('background-color', 'red');
             $('#emergency').text('SNOW EMERGENCY DECLARED');
-            updateBanner()
+            updateBanner();
           }
-
 
             //////// Legend
             // Defines each layer legend and container based on the 'layers' object
@@ -410,16 +402,16 @@ $(document).ready(function () {
             // Define Basemap titles
             basemapGallery.source.basemaps.items[0].title = 'Satellite';
             basemapGallery.source.basemaps.items[1].title = 'Street Map';
-            basemapGallery.source.basemaps.items[2].title = 'Street Map (Night)'
+            basemapGallery.source.basemaps.items[2].title = 'Street Map (Night)';
 
 
             ///// Events /////
 
-            // Removes all layers except for basemaps
+            // Removes all layers except for basemap
             function removeAllLayers(layer1, layer2) {
-              var mapLayers = layers.length
+              var mapLayers = layers.length;
               for (var j = mapLayers-1; j >=0; j--){
-                 if ((layers[j].id !== layer1) && (layers[j].id !== layer2)) {
+                 if ((layers[j].id !== layer1) && (layers[j].id !== layer2) && (layers[j].id !== 'streets-navigation-vector-base-layer')) {
                    layers[j].visible = false;
                  }
               }
@@ -430,70 +422,66 @@ $(document).ready(function () {
               switch (id) {
                 // Night Plow
                 case '1':
+                layer1 = 'Winter_Street_Parking_Night_Plow_View_7283';
+                layer2 = 'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187';
+                layers[8].visible = true;
                 layers[7].visible = true;
-                layers[6].visible = true;
-
-                layer1 = 'Winter_Street_Parking_Night_Plow_View_7283'
-                layer2 = 'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187'
-                removeAllLayers(layer1, layer2)
+                removeAllLayers(layer1, layer2);
                 break;
 
                 // Day Plow
                 case '2':
+                layer1 = 'Winter_Street_Parking_Day_Plow_View_607';
+                layer2 = 'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109';
+                layers[6].visible = true;
                 layers[5].visible = true;
-                layers[4].visible = true;
-
-                layer1 = 'Winter_Street_Parking_Day_Plow_View_607'
-                layer2 = 'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109'
-                removeAllLayers(layer1, layer2)
+                removeAllLayers(layer1, layer2);
                 break;
 
                 // Clean Up
                 case '3':
+                layer1 = 'Winter_Street_Parking_Cleanup_View_4291';
+                layer2 = 'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028';
+                layers[4].visible = true;
                 layers[3].visible = true;
-                layers[2].visible = true;
-
-                layer1 = 'Winter_Street_Parking_Cleanup_View_4291'
-                layer2 = 'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028'
-                removeAllLayers(layer1, layer2)
+                removeAllLayers(layer1, layer2);
                 break;
 
                 // Normal
                 case '4':
+                layer1 = 'Winter_Street_Parking_Normal_View_6799';
+                layer2 = 'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049';
+                layers[2].visible = true;
                 layers[1].visible = true;
-                layers[0].visible = true;
-
-                layer1 = 'Winter_Street_Parking_Normal_View_6799'
-                layer2 = 'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049'
-                removeAllLayers(layer1, layer2)
+                removeAllLayers(layer1, layer2);
                 break;
 
                 default:
-                console.log('There has been a problem loading the layer')
+                console.log('There has been a problem loading the layer');
                 layer1 = null;
                 layer2 = null;
-                removeAllLayers(layer1, layer2)
+                removeAllLayers(layer1, layer2);
               }
             }
             // Listen for when buttons have been clicked to turn layers on and off in map service.
             $('.sublayers-item').click(function (e) {
                 var id = e.currentTarget.getAttribute('data-id');
-                statusEvent(id)
+                statusEvent(id);
             });
 
             // Listen for when carousel has moved to turn layers on and off in map service.
             $('#layer-carousel').bind('slide.bs.carousel', function (e) {
               var id = e.relatedTarget.getAttribute('data-id');
-              statusEvent(id)
+              statusEvent(id);
             });
 
         })
         .catch(function(err) {
-            console.log(`Error: ${err}`)
-            normalParking()
+            console.log(`Error: ${err}`);
         });
     });
   });
+
   //////////////////////////////////////////////////////////////////
   ///// Card button + pop-up control
   // Remove css classes from select buttons on load
