@@ -109,7 +109,7 @@ $(document).ready(function () {
     async function getJSON() {
       let data = await (await fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
           method: 'get',
-      }).catch(handleErr)).json();
+      }).catch(handleErr));
         if(data.code && data.code == 400){
           alert(data.message);
         }
