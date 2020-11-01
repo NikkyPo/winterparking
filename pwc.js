@@ -142,6 +142,7 @@ $(document).ready(function () {
         .then(function(layers) {
           // Admin console data can be used here
           // let obj = data[0]
+
           let obj = [
                 {
                   nid: [
@@ -356,6 +357,8 @@ $(document).ready(function () {
             $('.status-header').css('background-color', 'red');
             $('#emergency').text('SNOW EMERGENCY DECLARED');
             updateBanner();
+          } else {
+            normalParking();
           }
 
             //////// Legend
