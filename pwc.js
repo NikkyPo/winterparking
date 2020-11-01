@@ -9,7 +9,7 @@ $(document).ready(function () {
     'esri/widgets/Search',
     'esri/widgets/BasemapGallery',
     'esri/Basemap',
-    'esri/widgets/Track',
+    "esri/widgets/Track",
     'esri/core/watchUtils',
     'esri/widgets/Zoom',
 
@@ -107,7 +107,10 @@ $(document).ready(function () {
 
     // Try loading Admin Console data first, then load results.
     async function getJSON() {
-      let data = await (await fetch('https://jsonplaceholder.typicode.com/users').catch(handleErr)).json();
+      let data = await (await fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
+          method: 'get',
+          mode: 'no-cors'
+      }).catch(handleErr));
         if(data.code && data.code == 400){
           alert(data.message);
         }
@@ -277,7 +280,7 @@ $(document).ready(function () {
              hour:  'numeric',
              minute: 'numeric'
           };
-          
+
           let layer1, layer2;
           let toNight, fromNight, toDay, fromDay, toClean, fromClean;
 
