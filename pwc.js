@@ -9,11 +9,13 @@ $(document).ready(function () {
     'esri/widgets/Search',
     'esri/widgets/BasemapGallery',
     'esri/Basemap',
-    "esri/widgets/Track",
-    'esri/core/watchUtils',
+    'esri/widgets/Track',
+    'esri/tasks/Locator',
     'esri/widgets/Zoom',
+    'esri/core/watchUtils',
+    'dojo/domReady!'
 
-  ], function (WebMap, MapView, Home, Legend, Search, BasemapGallery, Basemap, Track, watchUtils, Zoom) {
+  ], function (WebMap, MapView, Home, Legend, Search, BasemapGallery, Basemap, Track, Locator, Zoom, watchUtils) {
 
     ///// Web Map /////
     var map = new WebMap({
@@ -32,33 +34,9 @@ $(document).ready(function () {
     });
 
     ///// Search widget /////
-    var searchWidget = new Search({
-      view: view,
-      popupEnabled: false,
-    });
-    view.ui.add(searchWidget, 'top-right');
 
-    // Change search marker symbol
-    searchWidget.watch('activeSource', function (evt) {
-      evt.resultSymbol = marker;
-    });
-
-    // Returns search result
-    searchWidget.on('select-result', function (evt) {
-      console.log('search event info: ', JSON.stringify(evt.result.feature));
-      var point = {
-        type: 'point',
-        latitude: evt.result.feature.geometry.latitude,
-        longitude: evt.result.feature.geometry.longitude,
-      };
-    });
-
-    // Collapse all panels on search clicked
-    searchWidget.on('search-focus', function(evt){
-      $('.map-button, .help-button').removeClass('none');
-      $('#map-collapse, #help-collapse, #collapse-header').collapse('hide');
-    });
-
+    // Custom St. Paul geo-locator
+    var locatorUrl = 'https://utility.arcgis.com/usrsvcs/servers/167be6071af249d497556cae54c1ccd6/rest/services/World/GeocodeServer';
     // Custom marker for Search
     var marker = {
       type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
@@ -70,6 +48,40 @@ $(document).ready(function () {
       width: '1.5px',
       },
     };
+
+    var searchWidget = new Search({
+      view: view,
+      popupEnabled: false,
+      includeDefaultSources: false, // Removes default Esri Geocoder
+      sources : [
+        {
+          locator: new Locator({ //Uses custom St. Paul geo-locator with custom marker
+            url : locatorUrl
+          }),
+          id: 'StPaulGeocoder',
+          placeholder: 'Search for an address or place',
+          resultSymbol: marker
+        }
+      ]
+      });
+      view.ui.add(searchWidget, 'top-right');
+
+    // Returns search result. The returned result can be used for reporting.
+    searchWidget.on('select-result', function (evt) {
+      console.log('search event info: ', JSON.stringify(evt.result));
+    });
+
+    // Collapse all panels on search clicked
+    searchWidget.on('search-focus', function(evt){
+      $('.map-button, .help-button').removeClass('none');
+      $('#map-collapse, #help-collapse, #collapse-header').collapse('hide');
+    });
+
+    // Removes onfocusout from esri search widget to solve bug with jQuery.
+    // https://community.esri.com/thread/216034-search-widgetin-onfocusout-in-47-causes-error-when-used-with-jquery
+    view.when(() => {
+    document.querySelector('.esri-search__input').onfocusout = null;
+    });
 
     ///// Zoom widget /////
     var zoom = new Zoom({
@@ -109,10 +121,10 @@ $(document).ready(function () {
     async function getJSON() {
       let data = await (await fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json', {
           method: 'get',
-          mode: 'no-cors'
-      }).catch(handleErr));
+      }).catch(handleErr)).json();
         if(data.code && data.code == 400){
-          alert(data.message);
+          // alert(data.message);
+          console.log(data);
         }
         return data;
     }
@@ -130,11 +142,12 @@ $(document).ready(function () {
         map.load()
         .then(function() {
           // grab all the layers and load them
+
           const allLayers = map.allLayers;
           const promises = allLayers.map(function(layer) {
-            // Turn off all layers except basemap
+            // Turn off all layers
             layer.visible = false;
-            return layer;
+            return layer.load();
           });
           // Return layer promise
           return Promise.all(promises.toArray());
