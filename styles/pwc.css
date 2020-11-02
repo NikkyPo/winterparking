@@ -165,17 +165,17 @@ ul li .active {
   padding-left: 0;
   padding-right: 0;
 }
-/* .esri-ui-corner {
-  width: 100%;
-}
 .esri-search {
-  width: 100%;
-} */
+  width: 265px;
+}
 .esri-legend__layer-caption {
   display: none !important;
 }
 .esri-legend__layer-cell--info {
   width: 100%;
+}
+.esri-zoom {
+  display: none;
 }
 
 /* ------------------------------------------------------- */
@@ -238,58 +238,56 @@ ul li .active {
   .btn-group {
     font-size: 14px;
   }
-}
 
-.esri-search {
-  width: 215px;
+  /* esri search bar styling */
+  .esri-search {
+    width: 210px;
+  }
 }
 
 /* Very small screen heights and landscape orientation (starts at iPhone 5 and below) */
-@media (min-width: 320px) and (orientation: landscape) {
+@media (min-width: 320px) and (max-height: 500px) and (orientation: landscape) {
   .card {
     max-height: 205px;
-  }
-  /* .esri-ui-corner {
-    max-width: 100%;
-  } */
-  /* .esri-search {
-    width: 250px;
-  } */
-}
-
-
-/* Medium screen heights and portrait orientation (starts at iPad and above) */
-@media (min-width: 450px) and (orientation: portrait) {
-  .card {
-    max-height: 300px;
-  }
-
-  /* .esri-ui-corner {
-    max-width: 100%;
-  }
-  .esri-search {
-    width: 250px;
-  } */
-}
-
-/* Screens below desktop size increase content margins */
-@media (max-width: 769px) and (orientation: landscape) {
-  .container, .container-fluid, .container-lg, .container-md, .container-sm {
-    padding: 5px;
-  }
-  .card-body {
-    margin-left: 15%;
-    margin-right: 15%;
   }
   /* esri search bar styling */
   .esri-ui-top-right {
     left: 45px;
     right: auto;
   }
+  /* Cards */
+  #status-collapse, #map-collapse, #help-collapse {
+    width: 325px;
+  }
+  /* Tab bar */
+  .slidemenu {
+    width: 325px;
+  }
+}
+
+/* Screens below desktop size increase content margins */
+@media (max-width: 569px) and (max-height: 500px) and (orientation: landscape) {
+  .container, .container-fluid, .container-lg, .container-md, .container-sm {
+    padding: 5px;
+  }
+  /* esri search bar styling */
+  .esri-ui-top-right {
+    left: 45px;
+    right: auto;
+  }
+
+  /* Cards */
+  #status-collapse, #map-collapse, #help-collapse {
+    width: 325px;
+  }
+  /* Tab bar */
+  .slidemenu {
+    width: 325px;
+  }
 }
 
 /* Desktop View (starts at iPad Pro size) */
-@media (min-width: 769px) and (min-height: 500px) {
+@media (min-width: 569px) and (min-height: 500px) {
 
   /* Map div */
   #viewDiv {
@@ -306,7 +304,6 @@ ul li .active {
 
   .container-fluid {
     max-width: 700px;
-    ;
   }
 
   .card {
@@ -336,6 +333,9 @@ ul li .active {
   .esri-ui-top-right {
     left: 45px;
     right: auto;
+  }
+  .esri-zoom {
+    display: block;
   }
 
   /* Change hover styling mobile*/
