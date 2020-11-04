@@ -21,7 +21,8 @@ $(document).ready(function () {
     var map = new WebMap({
       portalItem: {
         id: '4c95d0ae349849ddbd50cde3e10971a8'
-      }
+      },
+      basemap: 'streets-navigation-vector'
     });
 
     ///// View /////
@@ -105,7 +106,7 @@ $(document).ready(function () {
     let basemapGallery = new BasemapGallery({
      source: [
          Basemap.fromId('hybrid'), // create a basemap from a well known id
-         Basemap.fromId('streets-vector'),
+         Basemap.fromId('streets-navigation-vector'),
          Basemap.fromId('streets-night-vector')
        ],
      container: 'map-div',
