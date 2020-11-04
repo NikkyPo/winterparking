@@ -315,8 +315,8 @@ $(document).ready(function () {
           // Call function when normal parking in effect or a map error happens
           function normalParking(){
             console.log('Outside of times. Put green');
-            layers[1].visible = true;
             layers[2].visible = true;
+            layers[1].visible = true;
             $('ul li .active').css('color', 'green');
             $('.status-header').css('background-color', 'green');
             $('#emergency').text('Normal Parking');
@@ -337,24 +337,24 @@ $(document).ready(function () {
 
             if((currentTime > nightPlowFrom) && (currentTime < nightPlowTo)){
               console.log('within nightplow');
-              layers[7].visible = true;
               layers[6].visible = true;
+              layers[7].visible = true;
               $('#phase').text('Night Plow Active ' + fromNight + ' to ' + toNight);
               $('#nightPlow-button').addClass('active');
               $('#layer-carousel').find('#nightPlow-active').first().addClass('active');
 
             } else if ((currentTime > dayPlowFrom) && (currentTime < dayPlowTo)) {
               console.log('within dayplow');
-              layers[5].visible = true;
               layers[4].visible = true;
+              layers[5].visible = true;
               $('#phase').text('Day Plow Active ' + fromDay + ' to ' + toDay);
               $('#dayPlow-button').addClass('active');
               $('#layer-carousel').find('#dayPlow-active').first().addClass('active');
 
             } else if ((currentTime > cleanUpFrom) && (currentTime < cleanUpTo)) {
               console.log('within cleanup');
-              layers[3].visible = true;
               layers[2].visible = true;
+              layers[3].visible = true;
               $('#phase').text('Clean Up Active');
               $('#cleanUp-button').addClass('active');
               $('#layer-carousel').find('#cleanUp-active').first().addClass('active');
