@@ -146,7 +146,7 @@ $(document).ready(function () {
           const allLayers = map.allLayers;
           const promises = allLayers.map(function(layer) {
             // Turn off all layers
-            layer.visible = false;
+            // layer.visible = false;
             return layer.load();
           });
           // Return layer promise
@@ -286,7 +286,7 @@ $(document).ready(function () {
               ];
 
           // Turn on Basemap Layer
-          layers[0].visible = true;
+          // layers[0].visible = true;
 
           // Options for timestamp visualization
           const options = {
