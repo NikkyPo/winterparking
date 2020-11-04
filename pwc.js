@@ -155,6 +155,7 @@ $(document).ready(function () {
         .then(function(layers) {
           // Admin console data can be used here
           // let obj = data[0]
+          alert('data loaded');
 
           let obj = [
                 {
@@ -315,6 +316,7 @@ $(document).ready(function () {
           // Call function when normal parking in effect or a map error happens
           function normalParking(){
             console.log('Outside of times. Put green');
+            alert('normal parking');
             layers[2].visible = true;
             layers[1].visible = true;
             $('ul li .active').css('color', 'green');
