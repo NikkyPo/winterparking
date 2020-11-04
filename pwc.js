@@ -21,8 +21,7 @@ $(document).ready(function () {
     var map = new WebMap({
       portalItem: {
         id: '4c95d0ae349849ddbd50cde3e10971a8'
-      },
-      basemap: 'streets-navigation-vector'
+      }
     });
 
     ///// View /////
@@ -286,9 +285,6 @@ $(document).ready(function () {
                 },
               ];
 
-          // Turn on Basemap Layer
-          // layers[0].visible = true;
-
           // Options for timestamp visualization
           const options = {
              hour12 : true,
@@ -429,7 +425,8 @@ $(document).ready(function () {
             function removeAllLayers(layer1, layer2) {
               var mapLayers = layers.length;
               for (var j = mapLayers-1; j >=0; j--){
-                 if ((layers[j].id !== layer1) && (layers[j].id !== layer2) && (layers[j].id !== 'streets-navigation-vector-base-layer')) {
+                console.log(layers[j].id);
+                 if ((layers[j].id !== layer1) && (layers[j].id !== layer2) && (layers[j].id !== 'VectorTile_915')) {
                    layers[j].visible = false;
                  }
               }
