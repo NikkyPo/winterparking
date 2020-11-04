@@ -109,7 +109,8 @@ $(document).ready(function () {
          Basemap.fromId('streets-night-vector')
        ],
      container: 'map-div',
-     view: view
+     view: view,
+     activeBasemap: 'streets-navigation-vector'
    });
 
     ////////////////////
@@ -285,6 +286,9 @@ $(document).ready(function () {
                 },
               ];
 
+          // Turn on Basemap Layer
+          // layers[0].visible = true;
+
           // Options for timestamp visualization
           const options = {
              hour12 : true,
@@ -425,7 +429,6 @@ $(document).ready(function () {
             function removeAllLayers(layer1, layer2) {
               var mapLayers = layers.length;
               for (var j = mapLayers-1; j >=0; j--){
-                console.log(layers[j].id);
                  if ((layers[j].id !== layer1) && (layers[j].id !== layer2) && (layers[j].id !== 'VectorTile_915')) {
                    layers[j].visible = false;
                  }
