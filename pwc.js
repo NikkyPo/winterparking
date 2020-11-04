@@ -105,12 +105,11 @@ $(document).ready(function () {
     let basemapGallery = new BasemapGallery({
      source: [
          Basemap.fromId('hybrid'), // create a basemap from a well known id
-         Basemap.fromId('streets-navigation-vector'),
+         Basemap.fromId('streets-vector'),
          Basemap.fromId('streets-night-vector')
        ],
      container: 'map-div',
-     view: view,
-     activeBasemap: 'streets-navigation-vector'
+     view: view
    });
 
     ////////////////////
@@ -155,7 +154,7 @@ $(document).ready(function () {
         .then(function(layers) {
           // Admin console data can be used here
           // let obj = data[0]
-          alert('data loaded');
+          console.log(data);
 
           let obj = [
                 {
@@ -316,7 +315,6 @@ $(document).ready(function () {
           // Call function when normal parking in effect or a map error happens
           function normalParking(){
             console.log('Outside of times. Put green');
-            alert('normal parking');
             layers[2].visible = true;
             layers[1].visible = true;
             $('ul li .active').css('color', 'green');
@@ -356,7 +354,7 @@ $(document).ready(function () {
             } else if ((currentTime > cleanUpFrom) && (currentTime < cleanUpTo)) {
               console.log('within cleanup');
               layers[2].visible = true;
-              layers[3].visible = true;
+              layers[1].visible = true;
               $('#phase').text('Clean Up Active');
               $('#cleanUp-button').addClass('active');
               $('#layer-carousel').find('#cleanUp-active').first().addClass('active');
