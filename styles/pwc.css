@@ -90,7 +90,7 @@ ul li .active {
 }
 
 .card {
-  max-height: 250px;
+  max-height: 300px;
   border-radius: 0;
   border-bottom: 1px solid rgba(0, 0, 0, .125);
   border-left: none;
@@ -132,13 +132,16 @@ ul li .active {
 /* Carrot transition */
 .card-header .fa {
   transition: .3s transform ease-in-out;
+  font-size: 16px;
 }
 .card-header .collapsed .fa {
   transform: rotate(180deg);
+  font-size: 16px;
 }
 
 #emergency {
   font-weight: bold;
+  font-size: 17px;
 }
 #phase {
   font-size: 14px;
@@ -231,7 +234,7 @@ ul li .active {
     font-size: 12px;
   }
   #emergency {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   /* Tabs */
