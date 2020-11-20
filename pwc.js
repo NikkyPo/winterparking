@@ -124,7 +124,7 @@ $(document).ready(function () {
 
     // Fetch Admin console data
     function getJSON() {
-      return fetch('/pwcs?_format=json')
+      return fetch('')
         .then(function (response) {
           return response.json();
         })
