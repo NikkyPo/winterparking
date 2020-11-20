@@ -185,6 +185,7 @@ ul li .active {
 .esri-input,
 .esri-widget--button,
 .esri-menu,
+.esri-search__form,
 .esri-input.esri-search__input,
 .esri-input.esri-search__input::placeholder {
   background-color: #343a40;
