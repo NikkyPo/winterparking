@@ -466,6 +466,7 @@ $(document).ready(function () {
 
           //// Check if data is valid.
           if (testData !== undefined) {
+            console.log('here')
             // Admin console data can be used here
             obj = data;
             // Set Time variables
