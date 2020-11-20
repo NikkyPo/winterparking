@@ -122,25 +122,38 @@ $(document).ready(function () {
     ///// Begin app /////
     ////////////////////
 
-    // Fetch Admin console data
-    function getJSON() {
-      return fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json')
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {
-          return data;
-        })
-        .catch(function (error) {
-          console.error(error.message);
-        });
+    // Try loading Admin Console data first, then load results.
+    async function getJSON() {
+      let data = await (
+        await fetch(
+          'https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json',
+          {
+            method: 'get',
+          }
+        ).catch(handleErr)
+      ).json();
+      if (data.code && data.code == 400) {
+        // alert(data.message);
+        console.log(data.message);
+      }
+      return data;
     }
-    // Function call to get Admin data, continue if no error.
+    // If there was a problem with request, user will see an alert message.
+    function handleErr(err) {
+      let resp = new Response(
+        JSON.stringify({
+          code: 400,
+          message:
+            'There was a problem and current status will not be shown. Please reload the webpage.',
+        })
+      );
+      return resp;
+    }
     getJSON().then(function (data) {
-      map
-        .load()
+      map.load()
         .then(function () {
           // grab all the layers and load them
+
           const allLayers = map.allLayers;
           const promises = allLayers.map(function (layer) {
             // Turn off all layers
@@ -151,90 +164,169 @@ $(document).ready(function () {
           return Promise.all(promises.toArray());
         })
         .then(function (layers) {
+          // Admin console data can be used here
+          // let obj = data;
+          // Turn on Basemap Layer
+          layers[0].visible = true;
+
           // Options for timestamp visualization
           const options = {
             hour12: true,
             hour: 'numeric',
             minute: 'numeric',
-            timeZone: 'America/Chicago',
           };
-          let obj;
+
           let layer1, layer2;
           let toNight, fromNight, toDay, fromDay, toClean, fromClean;
-          let nightPlowFrom,
+          let nightPlow,
+            nightPlowFrom,
             nightPlowTo,
+            dayPlow,
             dayPlowFrom,
             dayPlowTo,
+            cleanUp,
             cleanUpFrom,
             cleanUpTo;
-          let currentTime, createdTime;
+          let currentTime;
 
-          ///// Sort all layers based on id.
-          layers.sort(function (a, b) {
-            if (a.id > b.id) {
-              return 1;
-            } else if (a.id < b.id) {
-              return -1;
-            } else {
-              return 0;
-            }
+          //////// Legend
+          // Defines each layer legend and container based on the 'layers' object
+          var nightPlowlegend = new Legend({
+            view: view,
+            layerInfos: [
+              {
+                layer: layers[7],
+                title: 'Night Plow Routes (9:00 PM - 6:00 AM)',
+              }
+            ],
+            container: 'nightPlow-div',
           });
-          // IMPORTANT!!! If the web map changes at all (layers are replaced, etc)
-          // and the application is displaying incorrect layers, check that the code
-          // above returns the correct order of layer ids.
-          // If not, update the reference table below and look at the code where
-          // there is a layers[X] below to ensure the correct layers are being shown.
-          // There are two layers for each of the phases, and one for the basemap.
-          //
-          // Current sorting will return:
-          // 0 Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028
-          // 1 Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109
-          // 2 Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187
-          // 3 Snow_Emergency_Parking_USNG_Sections_Normal_View_6049
-          // 4 Winter_Street_Parking_Cleanup_View_4291
-          // 5 Winter_Street_Parking_Day_Plow_View_607
-          // 6 Winter_Street_Parking_Night_Plow_View_7283
-          // 7 Winter_Street_Parking_Normal_View_6799
-          // 8 streets-navigation-vector-base-layer
 
-          // Turn on Basemap Layer
-          layers[8].visible = true;
+          var dayPlowlegend = new Legend({
+            view: view,
+            layerInfos: [
+              {
+                layer: layers[5],
+                title: 'Day Plow Routes (8:00 AM - 5:00 PM)'
+              }
+            ],
+            container: 'dayPlow-div',
+          });
+
+          var cleanUplegend = new Legend({
+            view: view,
+            layerInfos: [
+              {
+                layer: layers[3]
+              }
+            ],
+            container: 'cleanUp-div',
+          });
+
+          var normallegend = new Legend({
+            view: view,
+            layerInfos: [
+              {
+                layer: layers[1]
+              }
+            ],
+            container: 'normal-div',
+          });
+
+          // Set to false so legend does not turn off as user zooms in/out
+          dayPlowlegend.respectLayerVisibility = false;
+          nightPlowlegend.respectLayerVisibility = false;
+          cleanUplegend.respectLayerVisibility = false;
+          normallegend.respectLayerVisibility = false;
+
+          // Define Basemap titles
+          basemapGallery.source.basemaps.items[0].title = 'Satellite';
+          basemapGallery.source.basemaps.items[1].title = 'Street Map';
+          basemapGallery.source.basemaps.items[2].title = 'Street Map (Night)';
+
+          ///// Events /////
+
+          // Removes all layers except for basemap
+          function removeAllLayers(layer1, layer2) {
+            var mapLayers = layers.length;
+            for (var j = mapLayers - 1; j >= 0; j--) {
+              if (
+                layers[j].id !== layer1 &&
+                layers[j].id !== layer2 &&
+                layers[j].id !== 'streets-navigation-vector-base-layer'
+              ) {
+                layers[j].visible = false;
+              }
+            }
+          }
+
+          // Turns layers on and off depending on the button click event id
+          function statusEvent(id) {
+            switch (id) {
+              // Night Plow
+              case '1':
+                layer1 = 'Winter_Street_Parking_Night_Plow_View_7283';
+                layer2 =
+                  'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187';
+                layers[8].visible = true;
+                layers[7].visible = true;
+                removeAllLayers(layer1, layer2);
+                break;
+
+              // Day Plow
+              case '2':
+                layer1 = 'Winter_Street_Parking_Day_Plow_View_607';
+                layer2 =
+                  'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109';
+                layers[6].visible = true;
+                layers[5].visible = true;
+                removeAllLayers(layer1, layer2);
+                break;
+
+              // Clean Up
+              case '3':
+                layer1 = 'Winter_Street_Parking_Cleanup_View_4291';
+                layer2 =
+                  'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028';
+                layers[4].visible = true;
+                layers[3].visible = true;
+                removeAllLayers(layer1, layer2);
+                break;
+
+              // Normal
+              case '4':
+                layer1 = 'Winter_Street_Parking_Normal_View_6799';
+                layer2 =
+                  'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049';
+                layers[2].visible = true;
+                layers[1].visible = true;
+                removeAllLayers(layer1, layer2);
+                break;
+
+              default:
+                console.log('There has been a problem loading the layer');
+                layer1 = null;
+                layer2 = null;
+                removeAllLayers(layer1, layer2);
+            }
+          }
+          // Listen for when buttons have been clicked to turn layers on and off in map service.
+          $('.sublayers-item').click(function (e) {
+            var id = e.currentTarget.getAttribute('data-id');
+            statusEvent(id);
+          });
+
+          // Listen for when carousel has moved to turn layers on and off in map service.
+          $('#layer-carousel').bind('slide.bs.carousel', function (e) {
+            var id = e.relatedTarget.getAttribute('data-id');
+            statusEvent(id);
+          });
 
           // Call function when normal parking in effect or a map error happens
           function normalParking() {
-            console.log('No Snow Emergency in effect');
-            layers[3].visible = true;
-            layers[7].visible = true;
-            $('ul li .active').css('color', 'green');
-            $('.status-header').css('background-color', 'green');
-            $('#emergency').text(obj.field_normal_parking_status_head[0].value);
-            $('#normal-button').addClass('active');
-            $('#layer-carousel')
-              .find('#normal-active')
-              .first()
-              .addClass('active');
-            // Set console times
-            toNight = new Date(nightPlowTo).toLocaleTimeString(
-              'en-US',
-              options
-            );
-            fromNight = new Date(nightPlowFrom).toLocaleTimeString(
-              'en-US',
-              options
-            );
-            toDay = new Date(dayPlowTo).toLocaleTimeString('en-US', options);
-            fromDay = new Date(dayPlowFrom).toLocaleTimeString(
-              'en-US',
-              options
-            );
-          }
-
-          // Normal Parking is shown if the Admin Console fails to provide data
-          // or another problem happens.
-          function normalParkingFailSafe() {
-            console.log('Something went wrong loading the data');
-            layers[3].visible = true;
-            layers[7].visible = true;
+            console.log('Outside of times. Put green');
+            layers[2].visible = true;
+            layers[1].visible = true;
             $('ul li .active').css('color', 'green');
             $('.status-header').css('background-color', 'green');
             $('#emergency').text('Normal Parking');
@@ -255,49 +347,46 @@ $(document).ready(function () {
               'en-US',
               options
             );
+
             toDay = new Date(dayPlowTo).toLocaleTimeString('en-US', options);
             fromDay = new Date(dayPlowFrom).toLocaleTimeString(
               'en-US',
               options
             );
-            // If current time is between date emergency was created and Night Plow To, show Night Plow
-            if (createdTime < nightPlowTo && currentTime < nightPlowTo) {
+
+            toClean = new Date(cleanUpTo).toLocaleTimeString('en-US', options);
+            fromClean = new Date(cleanUpFrom).toLocaleTimeString(
+              'en-US',
+              options
+            );
+
+            if (currentTime > nightPlowFrom && currentTime < nightPlowTo) {
               console.log('within nightplow');
-              layers[2].visible = true;
               layers[6].visible = true;
+              layers[7].visible = true;
               $('#phase').text(
-                obj.field_night_plow_phase_sub[0].value +
-                  fromNight +
-                  ' to ' +
-                  toNight
+                'Night Plow Active ' + fromNight + ' to ' + toNight
               );
               $('#nightPlow-button').addClass('active');
               $('#layer-carousel')
                 .find('#nightPlow-active')
                 .first()
                 .addClass('active');
-              // If current time is between the end of Night Plow and the end of Day Plow, show Day Plow
-            } else if (currentTime > nightPlowTo && currentTime < dayPlowTo) {
+            } else if (currentTime > dayPlowFrom && currentTime < dayPlowTo) {
               console.log('within dayplow');
-              layers[1].visible = true;
+              layers[4].visible = true;
               layers[5].visible = true;
-              $('#phase').text(
-                obj.field_day_plow_phase_sub_[0].value +
-                  fromDay +
-                  ' to ' +
-                  toDay
-              );
+              $('#phase').text('Day Plow Active ' + fromDay + ' to ' + toDay);
               $('#dayPlow-button').addClass('active');
               $('#layer-carousel')
                 .find('#dayPlow-active')
                 .first()
                 .addClass('active');
-              // If current time is between the end of Clean Up and the end of Day Plow, show Clean Up
-            } else if (currentTime > dayPlowTo && currentTime < cleanUpTo) {
+            } else if (currentTime > cleanUpFrom && currentTime < cleanUpTo) {
               console.log('within cleanup');
-              layers[4].visible = true;
-              layers[0].visible = true;
-              $('#phase').text(obj.field_clean_up_phase_sub_[0].value);
+              layers[2].visible = true;
+              layers[1].visible = true;
+              $('#phase').text('Clean Up Active');
               $('#cleanUp-button').addClass('active');
               $('#layer-carousel')
                 .find('#cleanUp-active')
@@ -305,37 +394,10 @@ $(document).ready(function () {
                 .addClass('active');
             } else {
               normalParking();
-              legendNormal();
             }
           }
 
-          // Calculates and refreshes page when Day Plow begins, Clean Up begins,
-          // and when Clean Up ends if current time is within those ranges
-          function refreshPage() {
-            if (currentTime < nightPlowTo && currentTime > createdTime) {
-              // Refreshes page when phase changes to Day Plow
-              var timeOut = nightPlowTo - currentTime;
-              setTimeout(function (timeOut) {
-                window.location.reload(true);
-              }, timeOut);
-            } else if (currentTime > dayPlowFrom && currentTime < cleanUpFrom) {
-              // Refreshes page when phase changes to Clean Up
-              var timeOut = cleanUpFrom - currentTime;
-              setTimeout(function (timeOut) {
-                window.location.reload(true);
-              }, timeOut);
-            } else if (currentTime > cleanUpFrom && currentTime < cleanUpTo) {
-              // Refreshes page when phase changes to Normal Parking
-              var timeOut = cleanUpTo - currentTime;
-              setTimeout(function (timeOut) {
-                window.location.reload(true);
-              }, timeOut);
-            } else {
-              console.log('no refresh needed');
-            }
-          }
-
-          let testData = [
+          let obj = [
                 {
                   nid: [
                     {
@@ -458,196 +520,51 @@ $(document).ready(function () {
                   field_night_plow_phase: [
                     {
                       value: '2020-11-19T21:00:20-05:00',
-                      end_value: '2020-11-28T07:00:20-05:00',
+                      end_value: '2020-11-28T06:00:20-05:00',
                     },
                   ],
                 },
               ];
 
           //// Check if data is valid.
-          if (testData !== undefined) {
-            
-            // Admin console data can be used here
-            obj = testData;
-            
-            console.log(obj.field_night_plow_phase.value)
+          if (obj !== undefined) {
             // Set Time variables
-            nightPlowFrom = new Date(
-              obj.field_night_plow_phase[0].value
-            ).getTime();
-            nightPlowTo = new Date(
-              obj.field_night_plow_phase[0].end_value
-            ).getTime();
+            nightPlow = obj[0].field_night_plow_phase;
+            nightPlowFrom = new Date(nightPlow[0].value).getTime();
+            nightPlowTo = new Date(nightPlow[0].end_value).getTime();
 
-            dayPlowFrom = new Date(obj.field_day_plow_phase[0].value).getTime();
-            dayPlowTo = new Date(
-              obj.field_day_plow_phase[0].end_value
-            ).getTime();
+            dayPlow = obj[0].field_day_plow_phase;
+            dayPlowFrom = new Date(dayPlow[0].value).getTime();
+            dayPlowTo = new Date(dayPlow[0].end_value).getTime();
 
-            cleanUpFrom = new Date(obj.field_clean[0].value).getTime();
-            cleanUpTo = new Date(obj.field_clean[0].end_value).getTime();
+            cleanUp = obj[0].field_clean_up_phase;
+            cleanUpFrom = new Date(cleanUp[0].value).getTime();
+            cleanUpTo = new Date(cleanUp[0].end_value).getTime();
 
             currentTime = Date.now();
-            createdTime = new Date(obj.created[0].value).getTime();
 
-            // Check if current time is between when snow emergency event was created and clean up end time.
-            if (currentTime >= createdTime && currentTime <= cleanUpTo) {
+            // Check if current time is between night plow start time and clean up end time.
+            if (currentTime >= nightPlowFrom && currentTime <= cleanUpTo) {
               $('ul li .active').css('color', 'red');
               $('.status-header').css('background-color', 'red');
               $('#emergency').text('SNOW EMERGENCY DECLARED');
               updateBanner();
-              refreshPage();
-            } else {
-              // If outside the above times, put normal parking
-              normalParking();
             }
           } else {
-            // If the data fails, show Normal Parking with an alert to the user
+            // If all else fails, Normal Parking with an alert
+            normalParking();
             alert(
               'There was a problem and current status will not be shown. Please reload the webpage.'
             );
-            normalParkingFailSafe();
           }
-
-          //////// Legend
-          // Defines each layer legend and container based on the 'layers' object
-          var nightPlowlegend = new Legend({
-            view: view,
-            layerInfos: [
-              {
-                layer: layers[2],
-                title: 'Night Plow (' + fromNight + ' to ' + toNight + ')',
-              },
-            ],
-            container: 'nightPlow-div',
-          });
-
-          var dayPlowlegend = new Legend({
-            view: view,
-            layerInfos: [
-              {
-                layer: layers[1],
-                title: 'Day Plow (' + fromDay + ' to ' + toDay + ')',
-              },
-            ],
-            container: 'dayPlow-div',
-          });
-
-          var cleanUplegend = new Legend({
-            view: view,
-            layerInfos: [
-              {
-                layer: layers[0],
-              },
-            ],
-            container: 'cleanUp-div',
-          });
-
-          var normallegend = new Legend({
-            view: view,
-            layerInfos: [
-              {
-                layer: layers[3],
-              },
-            ],
-            container: 'normal-div',
-          });
-
-          // Set to false so legend does not turn off as user zooms in/out
-          dayPlowlegend.respectLayerVisibility = false;
-          nightPlowlegend.respectLayerVisibility = false;
-          cleanUplegend.respectLayerVisibility = false;
-          normallegend.respectLayerVisibility = false;
-          // Define Basemap titles
-          basemapGallery.source.basemaps.items[0].title = 'Satellite';
-          basemapGallery.source.basemaps.items[1].title = 'Street Map';
-          basemapGallery.source.basemaps.items[2].title = 'Street Map (Night)';
-
-          ///// Events /////
-
-          // Removes all layers except for basemap
-          function removeAllLayers(layer1, layer2) {
-            var mapLayers = layers.length;
-            for (var j = mapLayers - 1; j >= 0; j--) {
-              if (
-                layers[j].id !== layer1 &&
-                layers[j].id !== layer2 &&
-                layers[j].id !== 'streets-navigation-vector-base-layer'
-              ) {
-                layers[j].visible = false;
-              }
-            }
-          }
-
-          // Turns layers on and off depending on the button click event id
-          function statusEvent(id) {
-            switch (id) {
-              // Night Plow
-              case '1':
-                layer1 = 'Winter_Street_Parking_Night_Plow_View_7283';
-                layer2 =
-                  'Snow_Emergency_Parking_USNG_Sections_Night_Plow_View_2187';
-                layers[2].visible = true;
-                layers[6].visible = true;
-                removeAllLayers(layer1, layer2);
-                break;
-
-              // Day Plow
-              case '2':
-                layer1 = 'Winter_Street_Parking_Day_Plow_View_607';
-                layer2 =
-                  'Snow_Emergency_Parking_USNG_Sections_Day_Plow_View_1109';
-                layers[1].visible = true;
-                layers[5].visible = true;
-                removeAllLayers(layer1, layer2);
-                break;
-
-              // Clean Up
-              case '3':
-                layer1 = 'Winter_Street_Parking_Cleanup_View_4291';
-                layer2 =
-                  'Snow_Emergency_Parking_USNG_Sections_Cleanup_View_6028';
-                layers[4].visible = true;
-                layers[0].visible = true;
-                removeAllLayers(layer1, layer2);
-                break;
-
-              // Normal
-              case '4':
-                layer1 = 'Winter_Street_Parking_Normal_View_6799';
-                layer2 =
-                  'Snow_Emergency_Parking_USNG_Sections_Normal_View_6049';
-                layers[3].visible = true;
-                layers[7].visible = true;
-                removeAllLayers(layer1, layer2);
-                break;
-
-              default:
-                console.log('There has been a problem loading the layer');
-                layer1 = null;
-                layer2 = null;
-                removeAllLayers(layer1, layer2);
-            }
-          }
-          // Listen for when buttons have been clicked to turn layers on and off in map service.
-          $('.sublayers-item').click(function (e) {
-            var id = e.currentTarget.getAttribute('data-id');
-            statusEvent(id);
-          });
-
-          // Listen for when carousel has moved to turn layers on and off in map service.
-          $('#layer-carousel').bind('slide.bs.carousel', function (e) {
-            var id = e.relatedTarget.getAttribute('data-id');
-            statusEvent(id);
-          });
         })
         .catch(function (err) {
-          console.log(err);
           console.log(`Error: ${err}`);
         });
     });
   });
 
+  //////////////////////////////////////////////////////////////////
   ///// Card button + pop-up control
   // Remove css classes from select buttons on load
   $('.map-button, .help-button').removeClass('none');
@@ -671,7 +588,7 @@ $(document).ready(function () {
         } else if ($(this).attr('aria-expanded') === 'false') {
           $('.map-button').addClass('none');
         } else {
-          console.log('panel collapsed');
+          console.log('not working');
         }
         break;
 
@@ -684,7 +601,7 @@ $(document).ready(function () {
         } else if ($(this).attr('aria-expanded') === 'false') {
           $('.help-button').addClass('none');
         } else {
-          console.log('panel collapsed');
+          console.log('not working');
         }
         break;
     }
