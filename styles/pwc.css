@@ -72,7 +72,6 @@ ul li .active {
   display: block;
   margin: 0 auto;
   line-height: 20px;
-  border-radius: 50%;
 }
 
 /* ------------------------------------------------------- */
@@ -179,6 +178,21 @@ ul li .active {
 }
 .esri-zoom {
   display: none;
+}
+/* Custom Widget styling (dark) */
+.esri-widget--button,
+.esri-menu,
+.esri-input,
+.esri-widget--button,
+.esri-menu,
+.esri-input.esri-search__input::placeholder {
+  background-color: #343a40;
+  color: #f6f6f6;
+}
+.esri-widget--button:hover,
+.esri-menu li:hover {
+  background-color: #252a2f;
+  color: white;
 }
 
 /* ------------------------------------------------------- */
