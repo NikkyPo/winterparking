@@ -469,6 +469,8 @@ $(document).ready(function () {
             
             // Admin console data can be used here
             obj = testData;
+            
+            console.log(obj.field_night_plow_phase.value)
             // Set Time variables
             nightPlowFrom = new Date(
               obj.field_night_plow_phase[0].value
