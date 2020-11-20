@@ -466,9 +466,9 @@ $(document).ready(function () {
 
           //// Check if data is valid.
           if (testData !== undefined) {
-            console.log('here')
+            
             // Admin console data can be used here
-            obj = data;
+            obj = testData;
             // Set Time variables
             nightPlowFrom = new Date(
               obj.field_night_plow_phase[0].value
