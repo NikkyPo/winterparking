@@ -519,8 +519,8 @@ $(document).ready(function () {
                   ],
                   field_night_plow_phase: [
                     {
-                      value: '2020-11-19T21:00:20-05:00',
-                      end_value: '2020-11-28T06:00:20-05:00',
+                      value: '2020-11-19T22:00:20-05:00',
+                      end_value: '2020-11-28T07:00:20-05:00',
                     },
                   ],
                 },
