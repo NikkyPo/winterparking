@@ -124,7 +124,7 @@ $(document).ready(function () {
 
     // Fetch Admin console data
     function getJSON() {
-      return fetch('')
+      return fetch('https://saintpaulltsdev.prod.acquia-sites.com/pwcs?_format=json')
         .then(function (response) {
           return response.json();
         })
